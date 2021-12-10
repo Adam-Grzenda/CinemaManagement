@@ -1,5 +1,6 @@
 package pl.put.CinemaManagement.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -8,14 +9,27 @@ import javax.sql.DataSource;
 
 @Configuration
 public class PostgresConfig {
+    @Value("${postgres.url}")
+    private String jdbcUrl;
+
+    @Value("${postgres.username}")
+    private String username;
+
+    @Value("${postgres.password}")
+    private String password;
+
+    @Value("${postgres.driver}")
+    private String postgresDriver;
+
+
     @Bean
     public DataSource postgresDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
-        dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUsername("postgres");
-        dataSource.setPassword("postgres");
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/cinema-database");
+        dataSource.setDriverClassName(postgresDriver);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+        dataSource.setUrl(jdbcUrl);
         return dataSource;
     }
 }
