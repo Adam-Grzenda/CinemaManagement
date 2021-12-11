@@ -4,4 +4,5 @@ import org.springframework.data.repository.CrudRepository;
 import pl.put.CinemaManagement.model.Cinema;
 
 public interface CinemaRepository extends CrudRepository<Cinema, Long> {
+    Cinema findByName(String name);
 }
