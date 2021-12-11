@@ -19,7 +19,7 @@ public class ClientSegment extends CinemaEntity {
 
     @ManyToMany
     @JoinTable(
-            name = "ClientCrossClientSegment",
+            name = "ClientsCrossClientSegments",
             joinColumns = @JoinColumn(name = "client_segment_id"),
             inverseJoinColumns = @JoinColumn(name = "client_id")
     )
@@ -27,7 +27,7 @@ public class ClientSegment extends CinemaEntity {
 
     @ManyToMany
     @JoinTable(
-            name = "PromotionalOfferCrossClientSegment",
+            name = "PromotionalOffersCrossClientSegments",
             joinColumns = @JoinColumn(name = "client_segment_id"),
             inverseJoinColumns = @JoinColumn(name = "promotional_offer_id")
     )

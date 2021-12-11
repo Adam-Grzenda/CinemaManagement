@@ -19,7 +19,7 @@ public class FoodCourtProductType extends CinemaEntity{
     @NotNull
     private String unit;
     @NotNull
-    private String count;
+    private float count;
     @ColumnDefault("0")
     private int storedUnitsCount;
 

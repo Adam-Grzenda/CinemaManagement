@@ -17,7 +17,7 @@ import java.util.List;
 public class Client extends CinemaEntity {
     @ManyToMany
     @JoinTable(
-            name = "ClientCrossClientSegment",
+            name = "ClientsCrossClientSegments",
             joinColumns = @JoinColumn(name = "client_id"),
             inverseJoinColumns = @JoinColumn(name = "client_segment_id")
     )

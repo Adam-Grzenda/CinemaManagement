@@ -5,9 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.List;
 
 @Getter @Setter
 @NoArgsConstructor
@@ -18,6 +17,10 @@ public class CinemaHall extends CinemaEntity {
     private String type;
 
     @ManyToOne
-    @JoinColumn(name = "cinema_id", nullable = false)
+    @PrimaryKeyJoinColumn(name = "cinema",
+            referencedColumnName = "cinema_id")
     private Cinema cinema;
+
+    @OneToMany(mappedBy = "cinemaHall")
+    private List<Chair> chairs;
 }

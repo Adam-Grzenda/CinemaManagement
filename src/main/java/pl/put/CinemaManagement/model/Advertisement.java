@@ -5,9 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,4 +21,10 @@ public class Advertisement extends CinemaEntity{
     @OneToOne(optional = true)
     @JoinColumn(name = "movie_id", nullable = true)
     private Movie movie;
+
+    @ManyToMany
+    @JoinTable(name = "FilmShowsCrossAdvertisements",
+            joinColumns = @JoinColumn(name = "advertisement_id"),
+            inverseJoinColumns = @JoinColumn(name = "filmshow_id"))
+    private List<FilmShow> filmShows;
 }

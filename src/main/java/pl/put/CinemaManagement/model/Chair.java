@@ -26,6 +26,7 @@ public class Chair extends CinemaEntity{
     private ChairTypes chairType;
 
     @ManyToOne
-    @JoinColumn(name = "cinema_hall_id", nullable = false)
+    @PrimaryKeyJoinColumn(name = "cinema_hall" ,
+            referencedColumnName = "cinema_hall_id")
     private CinemaHall cinemaHall;
 }

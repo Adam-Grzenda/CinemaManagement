@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -20,5 +21,5 @@ public class Cinema extends CinemaEntity {
     private String address;
 
     @OneToMany(mappedBy = "cinema")
-    private Set<CinemaHall> cinemaHalls;
+    private List<CinemaHall> cinemaHalls;
 }
