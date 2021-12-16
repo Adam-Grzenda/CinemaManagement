@@ -8,10 +8,16 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.List;
 
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
-public class FoodCourt extends CinemaEntity{
+@Table(
+        name = "food_court"
+)
+public class FoodCourt extends CinemaEntity {
+
+    @Column(name = "checkout_count")
     @NotNull
     private int checkoutCount;
 
@@ -19,9 +25,8 @@ public class FoodCourt extends CinemaEntity{
     @JoinColumn(name = "cinema_id", nullable = false)
     private Cinema cinema;
 
-    @ManyToMany
-    @JoinTable(name = "FoodCourtsCrossProductTypes",
-            joinColumns = @JoinColumn(name = "foodcourt_id"),
-            inverseJoinColumns = @JoinColumn(name = "foodcourt_product_type_id"))
-    private List<FoodCourtProductType> foodCourtProductTypes;
+    @OneToMany(mappedBy = "foodCourt")
+    private List<FoodCourt_ProductType> foodCourtProductTypes;
+
+
 }

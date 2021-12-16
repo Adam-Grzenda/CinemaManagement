@@ -11,28 +11,35 @@ import pl.put.CinemaManagement.model.pkeys.CinemaHallPK;
 import javax.persistence.*;
 
 
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
-@IdClass(ChairPK.class)
-
-public class Chair extends CinemaEntity{
-    public enum ChairTypes {
+@Table(
+        name = "chair",
+        uniqueConstraints =
+        @UniqueConstraint(columnNames =
+                {"hall_row", "hall_column", "cinema_hall"}))
+public class Chair extends CinemaEntity {
+    private enum ChairTypes {
         NORMAL,
         PREMIUM,
         DOUBLE
     }
+
+    @Column(name = "hall_row")
     @NotNull
     private int hallRow;
+
+    @Column(name = "hall_column")
     @NotNull
     private int hallColumn;
+
+    @Column(name = "chair_type")
     @Enumerated(EnumType.STRING)
     private ChairTypes chairType;
 
-    @JoinColumn(name = "cinemaHall", referencedColumnName = "number")
+    @JoinColumn(name = "cinema_hall", referencedColumnName = "id")
     @ManyToOne
     private CinemaHall cinemaHall;
-
-    @EmbeddedId
-    private ChairPK chairPK;
 }

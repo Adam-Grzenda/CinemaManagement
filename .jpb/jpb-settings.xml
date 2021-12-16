@@ -7,4 +7,9 @@
       </database-info>
     </database-infos>
   </component>
+  <component name="JpaPluginProjectSettings">
+    <option name="entityNameTemplate" />
+    <option name="isLombokGetterAndSetter" value="true" />
+    <option name="scaffoldingLanguage" />
+  </component>
 </project>

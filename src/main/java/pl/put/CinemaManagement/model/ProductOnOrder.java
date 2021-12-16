@@ -20,7 +20,7 @@ public class ProductOnOrder extends CinemaEntity{
     @ManyToOne
     @PrimaryKeyJoinColumn(name = "foodcourt_product_type",
             referencedColumnName = "foodcourt_product_type_id")
-    private FoodCourtProductType foodCourtProductType;
+    private ProductType foodCourtProductType;
 
     @ManyToOne
     @PrimaryKeyJoinColumn(name = "order",

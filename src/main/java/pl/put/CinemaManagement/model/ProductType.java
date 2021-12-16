@@ -13,19 +13,25 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-public class FoodCourtProductType extends CinemaEntity{
+@Table(
+        name = "product_type" )
+public class ProductType extends CinemaEntity {
+
+    @Column(name = "name")
     @NotNull
     private String name;
+
+    @Column(name = "unit")
     @NotNull
     private String unit;
+
+    @Column(name = "count")
     @NotNull
     private float count;
     @ColumnDefault("0")
     private int storedUnitsCount;
 
-    @ManyToMany
-    @JoinTable(name = "FoodCourtsCrossProductTypes",
-            joinColumns = @JoinColumn(name = "foodcourt_product_type_id"),
-            inverseJoinColumns = @JoinColumn(name = "foodcourt_id"))
-    private List<FoodCourt> foodCourts;
+    @OneToMany(mappedBy = "productType")
+    private List<FoodCourt_ProductType> foodCourtProductTypes;
+
 }
