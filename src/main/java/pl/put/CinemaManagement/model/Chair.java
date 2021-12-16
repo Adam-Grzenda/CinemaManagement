@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.lang.Nullable;
+import pl.put.CinemaManagement.model.pkeys.ChairPK;
+import pl.put.CinemaManagement.model.pkeys.CinemaHallPK;
 
 import javax.persistence.*;
 
@@ -12,6 +14,8 @@ import javax.persistence.*;
 @Getter @Setter
 @NoArgsConstructor
 @Entity
+@IdClass(ChairPK.class)
+
 public class Chair extends CinemaEntity{
     public enum ChairTypes {
         NORMAL,
@@ -25,8 +29,10 @@ public class Chair extends CinemaEntity{
     @Enumerated(EnumType.STRING)
     private ChairTypes chairType;
 
+    @JoinColumn(name = "cinemaHall", referencedColumnName = "number")
     @ManyToOne
-    @PrimaryKeyJoinColumn(name = "cinema_hall" ,
-            referencedColumnName = "cinema_hall_id")
     private CinemaHall cinemaHall;
+
+    @EmbeddedId
+    private ChairPK chairPK;
 }
