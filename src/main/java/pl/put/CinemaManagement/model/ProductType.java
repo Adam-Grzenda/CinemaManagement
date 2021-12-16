@@ -26,10 +26,9 @@ public class ProductType extends CinemaEntity {
     private String unit;
 
     @Column(name = "count")
+    @ColumnDefault(value = "0")
     @NotNull
     private float count;
-    @ColumnDefault("0")
-    private int storedUnitsCount;
 
     @OneToMany(mappedBy = "productType")
     private List<FoodCourt_ProductType> foodCourtProductTypes;

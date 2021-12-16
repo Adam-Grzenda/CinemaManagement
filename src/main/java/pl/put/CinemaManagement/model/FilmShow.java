@@ -14,37 +14,48 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-public class FilmShow extends CinemaEntity{
+@Table(
+        name = "film_show",
+        uniqueConstraints =
+        @UniqueConstraint(columnNames = {
+                "cinema_hall_id",
+                "date"}))
+//  #TODO czas filmu +- => zajęta sala, nwm czy to da się w constraint walnąć
+public class FilmShow extends CinemaEntity {
     private enum FilmShowType {
         IMAX, TWO_DIM, THREE_DIM
     }
+
+    @Column(name = "date")
     @NotNull
     private Timestamp date;
 
+    @Column(name = "film_show_type")
+    @ColumnDefault(value = "'TWO_DIM'")
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "varchar(32) default 'TWO_DIM'")
     private FilmShowType filmShowType;
 
     @ManyToOne
-    @PrimaryKeyJoinColumn(name = "movie",
-            referencedColumnName = "movie_id")
-    private Movie movie;
+    @JoinColumn(name = "film_id",
+            referencedColumnName = "id")
+    private Film film;
+
+    @ManyToOne
+    @JoinColumn(name = "cinema_hall_id",
+            referencedColumnName = "id")
+    private CinemaHall cinemaHall;
 
     @ManyToMany
-    @JoinTable(name = "FilmShowsCrossAdvertisements",
-            joinColumns = @JoinColumn(name = "filmshow_id"),
-            inverseJoinColumns = @JoinColumn(name = "advertisement_id"))
-    private List<Advertisement> advertisements;
-
-    @ManyToMany
-    @JoinTable(name = "FilmShowsCrossEmployees",
-            joinColumns = @JoinColumn(name = "filmshow_id"),
+    @JoinTable(name = "film_show_employee",
+            joinColumns = @JoinColumn(name = "film_show_id"),
             inverseJoinColumns = @JoinColumn(name = "employee_id"))
     private List<Employee> employees;
 
-    @ManyToOne
-    @PrimaryKeyJoinColumn(name = "cinemaHall",
-            referencedColumnName = "cinemaHall_id")
-    private CinemaHall cinemaHall;
+    @ManyToMany
+    @JoinTable(name = "film_show_advertisement",
+            joinColumns = @JoinColumn(name = "film_show_id"),
+            inverseJoinColumns = @JoinColumn(name = "advertisement_id"))
+    private List<Advertisement> advertisements;
+
 }

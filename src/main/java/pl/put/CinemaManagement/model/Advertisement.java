@@ -4,6 +4,7 @@ import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,19 +13,29 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Advertisement extends CinemaEntity{
+@Table(
+        name = "advertisement"
+)
+public class Advertisement extends CinemaEntity {
+
+    @Column(name = "company_name")
+    @ColumnDefault(value = "'own'")
     @NotNull
     private String companyName;
+
+    @Column(name = "duration")
     @NotNull
     private float duration;
 
-    @OneToOne(optional = true)
-    @JoinColumn(name = "movie_id", nullable = true)
-    private Movie movie;
+    @OneToOne
+    @JoinColumn(name = "film_id")
+    private Film film;
 
     @ManyToMany
-    @JoinTable(name = "FilmShowsCrossAdvertisements",
+    @JoinTable(name = "film_show_advertisement",
             joinColumns = @JoinColumn(name = "advertisement_id"),
-            inverseJoinColumns = @JoinColumn(name = "filmshow_id"))
+            inverseJoinColumns = @JoinColumn(name = "film_show_id"))
     private List<FilmShow> filmShows;
+
 }
+
