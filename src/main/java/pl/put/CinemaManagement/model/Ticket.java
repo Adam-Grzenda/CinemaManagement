@@ -4,38 +4,37 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-public class Ticket extends CinemaEntity{
+@Table(
+        name = "ticket",
+        uniqueConstraints =
+        @UniqueConstraint(columnNames =
+                {"film_show_id", "chair_id"}))
+public class Ticket extends CinemaEntity {
+
     @ManyToOne
-    @PrimaryKeyJoinColumn(name = "order",
-            referencedColumnName = "order_id")
+    @JoinColumn(name = "clients_order_id",
+            referencedColumnName = "id")
     private ClientsOrder clientsOrder;
 
     @ManyToOne
-    @PrimaryKeyJoinColumn(name = "client",
-            referencedColumnName = "client_id")
-    private Client client;
-
-    @ManyToOne
-    @JoinColumn(name = "promotional_offer",
+    @JoinColumn(name = "film_show_id",
             referencedColumnName = "id")
-    private PromotionalOffer promotionalOffer;
-
-    @ManyToOne
-    @PrimaryKeyJoinColumn(name = "filmshow",
-            referencedColumnName = "filmshow_id")
     private FilmShow filmShow;
 
     @ManyToOne
-    @PrimaryKeyJoinColumn(name = "chair",
-            referencedColumnName = "chair_id")
+    @PrimaryKeyJoinColumn(name = "chair_id",
+            referencedColumnName = "id")
     private Chair chair;
+
+    @ManyToOne
+    @JoinColumn(name = "promo_offer_id",
+            referencedColumnName = "id")
+    private PromoOffer promoOffer;
+
 }

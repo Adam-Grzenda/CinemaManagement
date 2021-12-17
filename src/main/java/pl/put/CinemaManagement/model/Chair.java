@@ -19,7 +19,7 @@ import javax.persistence.*;
         name = "chair",
         uniqueConstraints =
         @UniqueConstraint(columnNames =
-                {"hall_row", "hall_column", "cinema_hall"}))
+                {"hall_row", "hall_column", "cinema_hall_id"}))
 public class Chair extends CinemaEntity {
     private enum ChairTypes {
         NORMAL,
@@ -39,7 +39,8 @@ public class Chair extends CinemaEntity {
     @Enumerated(EnumType.STRING)
     private ChairTypes chairType;
 
-    @JoinColumn(name = "cinema_hall", referencedColumnName = "id")
+    @JoinColumn(name = "cinema_hall_id",
+            referencedColumnName = "id")
     @ManyToOne
     private CinemaHall cinemaHall;
 }

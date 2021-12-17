@@ -16,7 +16,7 @@ import java.util.List;
 @Table(
         name = "cinema_hall",
         uniqueConstraints=
-            @UniqueConstraint(columnNames = {"number", "cinema"}))
+            @UniqueConstraint(columnNames = {"number", "cinema_id"}))
 public class CinemaHall extends CinemaEntity {
     private enum HallTypes {
 
@@ -28,7 +28,8 @@ public class CinemaHall extends CinemaEntity {
 
     private String type;
 
-    @JoinColumn(name = "cinema", referencedColumnName = "id")
+    @JoinColumn(name = "cinema_id",
+            referencedColumnName = "id")
     @ManyToOne
     private Cinema cinema;
 

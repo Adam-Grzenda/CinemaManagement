@@ -5,25 +5,27 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-public class ProductOnOrder extends CinemaEntity{
+@Table(
+        name = "product_on_order")
+public class ProductOnOrder extends CinemaEntity {
+
+    @Column(name = "count")
     @NotNull
     private int count;
 
     @ManyToOne
-    @PrimaryKeyJoinColumn(name = "foodcourt_product_type",
-            referencedColumnName = "foodcourt_product_type_id")
-    private ProductType foodCourtProductType;
+    @JoinColumn(name = "product_type_id",
+            referencedColumnName = "id")
+    private ProductType productType;
 
     @ManyToOne
-    @PrimaryKeyJoinColumn(name = "order",
-            referencedColumnName = "order_id")
+    @JoinColumn(name = "order_id",
+            referencedColumnName = "id")
     private ClientsOrder clientsOrder;
 }

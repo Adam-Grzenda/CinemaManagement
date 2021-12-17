@@ -4,6 +4,7 @@ import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,17 +13,23 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "promotional_offer")
-public class PromotionalOffer extends CinemaEntity {
+@Table(
+        name = "promo_offer")
+public class PromoOffer extends CinemaEntity {
+
+    @Column(name = "name")
     @NotNull
     private String name;
+
+    @Column(name = "discount")
+    @ColumnDefault(value = "0")
     @NotNull
     private float discount;
 
     @ManyToMany
     @JoinTable(
-            name = "PromotionalOffersCrossClientSegments",
-            joinColumns = @JoinColumn(name = "promotional_offer_id"),
+            name = "promo_offer_client_segment",
+            joinColumns = @JoinColumn(name = "promo_offer_id"),
             inverseJoinColumns = @JoinColumn(name = "client_segment_id")
     )
     private List<ClientSegment> clientSegments;

@@ -21,6 +21,7 @@ import java.util.List;
                 "cinema_hall_id",
                 "date"}))
 //  #TODO czas filmu +- => zajęta sala, nwm czy to da się w constraint walnąć
+// moze pola start i end i trigger ustawiajacy end na start+film.duration?
 public class FilmShow extends CinemaEntity {
     private enum FilmShowType {
         IMAX, TWO_DIM, THREE_DIM
