@@ -4,8 +4,6 @@ import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.jpa.repository.query.Procedure;
-import pl.put.CinemaManagement.model.pkeys.CinemaHallPK;
 
 import javax.persistence.*;
 import java.util.List;

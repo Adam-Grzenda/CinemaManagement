@@ -12,7 +12,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(
-        name = "product_on_order")
+        name = "product_on_order",
+        uniqueConstraints =
+        @UniqueConstraint(columnNames =
+                {"order_id", "product_type_id"}))
 public class ProductOnOrder extends CinemaEntity {
 
     @Column(name = "count")
