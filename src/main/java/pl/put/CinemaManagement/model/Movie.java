@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import java.sql.Date;
 import java.sql.Timestamp;
 
 @Getter
@@ -22,6 +24,9 @@ public class Movie extends CinemaEntity {
     private float duration;
     @ColumnDefault("false")
     private boolean is3D;
-    private Timestamp licenseTo;
-    private Timestamp premiereDate;
+    private Date licenseTo;
+    private Date premiereDate;
+
+    @Column(columnDefinition="TEXT")
+    private String description;
 }
