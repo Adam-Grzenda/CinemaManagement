@@ -9,7 +9,6 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import java.sql.Date;
-import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -29,4 +28,6 @@ public class Movie extends CinemaEntity {
 
     @Column(columnDefinition="TEXT")
     private String description;
+
+    private String imageSource;
 }
