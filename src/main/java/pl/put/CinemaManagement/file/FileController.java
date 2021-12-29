@@ -1,8 +1,6 @@
 package pl.put.CinemaManagement.file;
 
-import com.amazonaws.Response;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,13 +16,11 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin(
-    origins = "${angular.client}"
-)
 public class FileController {
 
     private final FileService fileService;
 
+    @CrossOrigin(origins = "${angular.client}")
     @PostMapping(value="/upload", produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> upload(@RequestPart MultipartFile image) {
         String randomObjectKey = UUID.randomUUID().toString();
@@ -36,6 +32,7 @@ public class FileController {
         }
     }
 
+    @CrossOrigin(origins = "${angular.client}")
     @GetMapping(value="/file/{id}", produces= MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<?> getFile(@PathVariable String id) {
         try {
