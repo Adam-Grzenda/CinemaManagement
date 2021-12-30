@@ -9,16 +9,16 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.sql.Timestamp;
+import java.sql.Date;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @Table(
-        name = "film"
+        name = "movie"
 )
-public class Film extends CinemaEntity {
+public class Movie extends CinemaEntity {
 
     @Column(name = "title")
     @NotNull
@@ -40,10 +40,15 @@ public class Film extends CinemaEntity {
     @Column(name = "license_to")
     @ColumnDefault("'2200-12-31'")
     @NotNull
-    private Timestamp licenseTo;
+    private Date licenseTo;
 
     @Column(name = "premiere_date")
     @NotNull
-    private Timestamp premiereDate;
+    private Date premiereDate;
+
+    @Column(columnDefinition="TEXT")
+    private String description;
+
+    private String imageSource;
 
 }
