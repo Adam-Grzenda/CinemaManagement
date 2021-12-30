@@ -16,9 +16,9 @@ import java.sql.Date;
 @NoArgsConstructor
 @Entity
 @Table(
-        name = "movie"
+        name = "film"
 )
-public class Movie extends CinemaEntity {
+public class Film extends CinemaEntity {
 
     @Column(name = "title")
     @NotNull
