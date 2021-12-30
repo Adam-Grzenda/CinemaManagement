@@ -1,28 +1,23 @@
 package pl.put.CinemaManagement.model;
 
-import lombok.AllArgsConstructor;
+import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
-@Entity @Getter @Setter
+@Getter @Setter
 @NoArgsConstructor
-public class Cinema {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+@Entity
+@Table(name = "cinema")
+public class Cinema extends CinemaEntity {
+    @NotNull
     private String name;
+    @NotNull
     private String address;
 
-    public Cinema(String name, String address) {
-        this.name = name;
-        this.address = address;
-    }
-
+    @OneToMany(mappedBy = "cinema")
+    private List<CinemaHall> cinemaHalls;
 }
