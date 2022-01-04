@@ -11,7 +11,10 @@ import java.util.List;
 @Getter @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "cinema")
+@Table(
+        name = "cinema",
+        uniqueConstraints=
+        @UniqueConstraint(columnNames = {"name", "address"}))
 public class Cinema extends CinemaEntity {
     @NotNull
     private String name;

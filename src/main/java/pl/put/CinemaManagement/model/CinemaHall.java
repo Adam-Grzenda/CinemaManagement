@@ -16,9 +16,7 @@ import java.util.List;
         uniqueConstraints=
             @UniqueConstraint(columnNames = {"number", "cinema_id"}))
 public class CinemaHall extends CinemaEntity {
-    private enum HallTypes {
 
-    }
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     //@GeneratedValue(strategy = GenerationType.SEQUENCE)
     @NotNull
