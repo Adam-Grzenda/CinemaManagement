@@ -4,5 +4,5 @@ import org.springframework.data.repository.CrudRepository;
 import pl.put.CinemaManagement.model.Film;
 
 
-public interface MovieRepository extends CrudRepository<Film, Long> {
+public interface FilmRepository extends CrudRepository<Film, Long> {
 }
