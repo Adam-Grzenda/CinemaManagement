@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class FilmShow extends CinemaEntity {
 
     @Column(name = "date")
     @NotNull
-    private Timestamp date;
+    private Date date;
 
     @Column(name = "film_show_type")
     @ColumnDefault(value = "'TWO_DIM'")
