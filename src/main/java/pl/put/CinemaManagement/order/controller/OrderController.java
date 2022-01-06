@@ -3,9 +3,10 @@ package pl.put.CinemaManagement.order.controller;
 import javassist.tools.web.BadHttpRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import pl.put.CinemaManagement.model.*;
 import pl.put.CinemaManagement.order.dto.OrderDTO;
 import pl.put.CinemaManagement.repository.ClientRepository;
@@ -18,7 +19,8 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-@Controller
+@CrossOrigin("http://localhost:4200")
+@RestController
 public class OrderController {
 
     private final ClientsOrderRepository clientsOrderRepository;
@@ -28,9 +30,10 @@ public class OrderController {
 
     @PostMapping(value = "/placeOrder")
     ClientsOrder placeOrder(@RequestBody OrderDTO orderDTO) throws BadHttpRequest {
+        log.info(orderDTO.toString());
         ClientsOrder clientsOrder = new ClientsOrder();
 
-        Client client = clientRepository.findById(orderDTO.getClientId()).orElseThrow(BadHttpRequest::new);
+        Client client = clientRepository.findById(orderDTO.getUserId()).orElseThrow(BadHttpRequest::new);
         clientsOrder.setClient(client);
 
         FilmShow filmShow = filmShowRepository.findById(orderDTO.getFilmShowId()).orElseThrow(BadHttpRequest::new);
@@ -38,14 +41,15 @@ public class OrderController {
         List<Ticket> tickets = new ArrayList<>();
 
         log.info("Tickets: ");
-        for (Chair chair: orderDTO.getChairs()) {
-            Ticket ticket = new Ticket();
-            ticket.setChair(chair);
-            ticket.setFilmShow(filmShow);
-            //TODO set promo offer
-            log.info(ticket.toString());
+        if (orderDTO.getChairs() != null) {
+            for (Chair chair : orderDTO.getChairs()) {
+                Ticket ticket = new Ticket();
+                ticket.setChair(chair);
+                ticket.setFilmShow(filmShow);
+                //TODO set promo offer
+                log.info(ticket.toString());
+            }
         }
-
         //TODO assign tickets to order
 
 
