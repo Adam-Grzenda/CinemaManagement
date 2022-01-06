@@ -50,4 +50,8 @@ public class ClientsOrder extends CinemaEntity {
     @JoinColumn(name = "client_id",
             referencedColumnName = "id")
     private Client client;
+
+    public float calculateOrderCost() {
+        return 10; //TODO
+    }
 }

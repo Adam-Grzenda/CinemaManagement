@@ -3,9 +3,11 @@ package pl.put.CinemaManagement.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
+@ToString
 @Getter
 @Setter
 @NoArgsConstructor
