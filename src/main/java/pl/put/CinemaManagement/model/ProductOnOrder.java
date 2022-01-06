@@ -23,11 +23,13 @@ public class ProductOnOrder extends CinemaEntity {
     private int count;
 
     @ManyToOne
+    @NotNull
     @JoinColumn(name = "product_type_id",
             referencedColumnName = "id")
     private ProductType productType;
 
     @ManyToOne
+    @NotNull
     @JoinColumn(name = "order_id",
             referencedColumnName = "id")
     private ClientsOrder clientsOrder;

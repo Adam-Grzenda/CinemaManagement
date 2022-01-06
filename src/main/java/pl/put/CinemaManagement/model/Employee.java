@@ -59,6 +59,7 @@ public class Employee extends CinemaEntity {
     private Timestamp employedTo;
 
     @ManyToOne
+    @NotNull
     @JoinColumn(name = "cinema_id",
             referencedColumnName = "id")
     private Cinema cinema;

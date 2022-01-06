@@ -1,5 +1,6 @@
 package pl.put.CinemaManagement.model;
 
+import com.sun.istack.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,16 +23,19 @@ public class FoodCourt_ProductType {
 
     @Column(name = "stored_units_count")
     @ColumnDefault(value = "0")
+    @NotNull
     private Long storedUnitsCount;
 
     @ManyToOne
     @MapsId("foodCourt")
+    @NotNull
     @JoinColumn(name = "food_court_id",
             referencedColumnName = "id")
     private FoodCourt foodCourt;
 
     @ManyToOne
     @MapsId("productType")
+    @NotNull
     @JoinColumn(name = "product_type_id",
             referencedColumnName = "id")
     private ProductType productType;

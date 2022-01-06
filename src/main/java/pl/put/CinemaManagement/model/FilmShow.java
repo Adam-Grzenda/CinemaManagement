@@ -39,11 +39,13 @@ public class FilmShow extends CinemaEntity {
     private FilmShowType filmShowType;
 
     @ManyToOne
+    @NotNull
     @JoinColumn(name = "film_id",
             referencedColumnName = "id")
     private Film film;
 
     @ManyToOne
+    @NotNull
     @JoinColumn(name = "cinema_hall_id",
             referencedColumnName = "id")
     private CinemaHall cinemaHall;

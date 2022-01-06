@@ -22,6 +22,7 @@ public class FoodCourt extends CinemaEntity {
     private int checkoutCount;
 
     @ManyToOne
+    @NotNull
     @JoinColumn(name = "cinema_id", nullable = false)
     private Cinema cinema;
 

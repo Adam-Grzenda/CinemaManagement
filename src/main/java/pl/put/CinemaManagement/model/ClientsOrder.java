@@ -47,6 +47,7 @@ public class ClientsOrder extends CinemaEntity {
     private float amount;
 
     @ManyToOne
+    @NotNull
     @JoinColumn(name = "client_id",
             referencedColumnName = "id")
     private Client client;

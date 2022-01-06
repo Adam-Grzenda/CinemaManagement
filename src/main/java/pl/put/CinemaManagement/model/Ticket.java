@@ -1,5 +1,6 @@
 package pl.put.CinemaManagement.model;
 
+import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,16 +19,19 @@ import javax.persistence.*;
 public class Ticket extends CinemaEntity {
 
     @ManyToOne
+    @NotNull //#TODO czy na pewno?
     @JoinColumn(name = "clients_order_id",
             referencedColumnName = "id")
     private ClientsOrder clientsOrder;
 
     @ManyToOne
+    @NotNull
     @JoinColumn(name = "film_show_id",
             referencedColumnName = "id")
     private FilmShow filmShow;
 
     @ManyToOne
+    @NotNull
     @PrimaryKeyJoinColumn(name = "chair_id",
             referencedColumnName = "id")
     private Chair chair;

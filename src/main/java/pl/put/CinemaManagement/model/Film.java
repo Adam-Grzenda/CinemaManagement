@@ -46,9 +46,10 @@ public class Film extends CinemaEntity {
     @NotNull
     private Date premiereDate;
 
-    @Column(columnDefinition="TEXT")
+    @Column(name = "description", columnDefinition="TEXT")
     private String description;
 
+    @Column(name = "image_source", columnDefinition="TEXT")
     private String imageSource;
 
 }
