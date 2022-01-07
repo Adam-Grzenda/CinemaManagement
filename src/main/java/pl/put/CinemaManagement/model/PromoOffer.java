@@ -26,11 +26,7 @@ public class PromoOffer extends CinemaEntity {
     @NotNull
     private float discount;
 
-    @ManyToMany
-    @JoinTable(
-            name = "promo_offer_client_segment",
-            joinColumns = @JoinColumn(name = "promo_offer_id"),
-            inverseJoinColumns = @JoinColumn(name = "client_segment_id")
-    )
+
+    @OneToMany(mappedBy = "promoOffer")
     private List<ClientSegment> clientSegments;
 }
