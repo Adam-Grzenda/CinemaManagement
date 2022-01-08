@@ -23,4 +23,7 @@ public class Cinema extends CinemaEntity {
 
     @OneToMany(mappedBy = "cinema")
     private List<CinemaHall> cinemaHalls;
+
+    @OneToMany(mappedBy = "cinema")
+    private List<FoodCourt> foodCourts;
 }

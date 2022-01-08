@@ -1,11 +1,9 @@
 package pl.put.CinemaManagement.model;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.jmx.export.annotation.ManagedAttribute;
 import pl.put.CinemaManagement.model.pkeys.FoodCourt_ProductTypePK;
 
 import javax.persistence.*;
@@ -15,7 +13,7 @@ import javax.persistence.*;
 @Entity
 @Table(
         name = "food_court_product_type")
-public class FoodCourt_ProductType {
+public class FoodCourts_ProductType {
 
     @EmbeddedId
     private FoodCourt_ProductTypePK id;

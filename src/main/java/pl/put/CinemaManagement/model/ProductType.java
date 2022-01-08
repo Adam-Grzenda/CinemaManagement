@@ -31,6 +31,6 @@ public class ProductType extends CinemaEntity {
     private float amount;
 
     @OneToMany(mappedBy = "productType")
-    private List<FoodCourt_ProductType> foodCourtProductTypes;
+    private List<FoodCourts_ProductType> foodCourtProductTypes;
 
 }
