@@ -45,7 +45,7 @@ public class ClientsOrder extends CinemaEntity {
 
     @Column(name = "amount")
     @NotNull
-    private float amount;
+    private Double amount;
 
     @ManyToOne
     @JoinColumn(name = "client_id",
@@ -55,7 +55,4 @@ public class ClientsOrder extends CinemaEntity {
     @OneToMany(mappedBy = "clientsOrder")
     List<Ticket> tickets;
 
-    public float calculateOrderCost() {
-        return 10; //TODO
-    }
 }
