@@ -1,11 +1,10 @@
 package pl.put.CinemaManagement.model;
 
-import lombok.Builder;
+import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.jmx.export.annotation.ManagedAttribute;
 import pl.put.CinemaManagement.model.pkeys.FoodCourt_ProductTypePK;
 
 import javax.persistence.*;
