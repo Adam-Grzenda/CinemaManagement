@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
+@Getter @Setter
 @Embeddable
 public class FoodCourt_ProductTypePK implements Serializable {
 

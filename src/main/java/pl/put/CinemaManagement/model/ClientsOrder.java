@@ -8,6 +8,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Getter
 @Setter
@@ -50,6 +51,9 @@ public class ClientsOrder extends CinemaEntity {
     @JoinColumn(name = "client_id",
             referencedColumnName = "id")
     private Client client;
+
+    @OneToMany(mappedBy = "clientsOrder")
+    List<Ticket> tickets;
 
     public float calculateOrderCost() {
         return 10; //TODO
