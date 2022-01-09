@@ -8,9 +8,11 @@ import java.util.List;
 
 @ToString
 @Data
-public class OrderDTO {
+public class Order {
     private Long userId;
     private List<Chair> chairs;
-    private List<FoodOrderItemDTO> foodOrderItems;
+    private List<FoodOrderItem> foodOrderItems;
     private Long filmShowId;
+
+    private Long promoOfferId;
 }
