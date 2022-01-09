@@ -1,5 +1,6 @@
 package pl.put.CinemaManagement.model;
 
+import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,10 +24,8 @@ public class ClientSegment extends CinemaEntity {
             inverseJoinColumns = @JoinColumn(name = "client_id"))
     private List<Client> clients;
 
-    @ManyToMany
-    @JoinTable(
-            name = "promo_offer_client_segment",
-            joinColumns = @JoinColumn(name = "client_segment_id"),
-            inverseJoinColumns = @JoinColumn(name = "promo_offer_id"))
-    private List<PromoOffer> promoOffers;
+
+    @ManyToOne
+    @JoinColumn(name = "promo_offer", referencedColumnName = "id")
+    private PromoOffer promoOffer;
 }

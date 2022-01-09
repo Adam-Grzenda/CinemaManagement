@@ -17,9 +17,9 @@ import java.util.List;
 )
 public class FoodCourt extends CinemaEntity {
 
-    @Column(name = "checkout_count")
+    @Column(name = "checkout_number")
     @NotNull
-    private int checkoutCount;
+    private int checkoutNumber;
 
     @ManyToOne
     @NotNull
@@ -27,7 +27,7 @@ public class FoodCourt extends CinemaEntity {
     private Cinema cinema;
 
     @OneToMany(mappedBy = "foodCourt")
-    private List<FoodCourt_ProductType> foodCourtProductTypes;
+    private List<FoodCourts_ProductType> foodCourtProductTypes;
 
 
 }

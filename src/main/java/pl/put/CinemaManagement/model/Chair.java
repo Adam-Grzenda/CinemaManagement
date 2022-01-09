@@ -18,7 +18,7 @@ import javax.persistence.*;
         @UniqueConstraint(columnNames =
                 {"hall_row", "hall_column", "cinema_hall_id"}))
 public class Chair extends CinemaEntity {
-    private enum ChairTypes {
+    public enum ChairTypes {
         NORMAL,
         PREMIUM,
         DOUBLE

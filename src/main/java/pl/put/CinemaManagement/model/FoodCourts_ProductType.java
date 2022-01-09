@@ -1,6 +1,5 @@
 package pl.put.CinemaManagement.model;
 
-import com.sun.istack.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +15,7 @@ import javax.persistence.*;
 @Entity
 @Table(
         name = "food_court_product_type")
-public class FoodCourt_ProductType {
+public class FoodCourts_ProductType {
 
     @EmbeddedId
     private FoodCourt_ProductTypePK id;

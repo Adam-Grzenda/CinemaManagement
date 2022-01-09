@@ -24,9 +24,9 @@ public class CinemaHall extends CinemaEntity {
 
     private String type;
 
+    @ManyToOne
     @JoinColumn(name = "cinema_id",
             referencedColumnName = "id")
-    @ManyToOne
     private Cinema cinema;
 
     @OneToMany(mappedBy = "cinemaHall")
