@@ -38,7 +38,7 @@ public class OrderService {
             throw new BadOrderException("FilmShowId cannot be null");
         });
 
-        List<Ticket> tickets = new ArrayList<>();
+        List<Ticket> tickets = clientsOrder.getTickets();
 
         log.info("Tickets: ");
         if (order.getChairs() != null) {
@@ -46,11 +46,10 @@ public class OrderService {
                 Ticket ticket = new Ticket();
                 ticket.setChair(chair);
                 ticket.setFilmShow(filmShow);
+                tickets.add(ticket);
                 //TODO set promo offer
-                log.info(ticket.toString());
             }
         }
-        //TODO assign tickets to order
 
         clientsOrder.setAmount(calculateTotalCost(order));
 
@@ -122,7 +121,6 @@ public class OrderService {
                 ).getBasePrice();
 
         productCostDTO.setBasePrice(basePrice);
-        productCostDTO.setDiscount(discount);
         productCostDTO.setFinalPrice(basePrice - basePrice * discount);
 
         return productCostDTO;
