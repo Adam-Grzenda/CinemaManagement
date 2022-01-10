@@ -13,5 +13,8 @@ public class OrderProductCost {
 
     public OrderProductCost(String type, String subtype, float discount, Long itemCount) {
         this.type = type;
+        this.subtype = subtype;
+        this.discount = discount;
+        this.itemCount = itemCount;
     }
 }
