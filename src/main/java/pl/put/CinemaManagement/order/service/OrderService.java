@@ -7,6 +7,7 @@ import pl.put.CinemaManagement.model.*;
 import pl.put.CinemaManagement.order.dto.FoodOrderItem;
 import pl.put.CinemaManagement.order.dto.Order;
 import pl.put.CinemaManagement.order.dto.OrderProductCost;
+import pl.put.CinemaManagement.order.dto.PlacedOrder;
 import pl.put.CinemaManagement.order.exception.BadOrderException;
 import pl.put.CinemaManagement.repository.*;
 
@@ -25,7 +26,7 @@ public class OrderService {
     private final BasePriceRepository priceRepository;
     private final PromoOfferRepository promoOfferRepository;
 
-    public ClientsOrder placeOrder(Order order) {
+    public PlacedOrder placeOrder(Order order) {
         log.info(order.toString());
         ClientsOrder clientsOrder = new ClientsOrder();
 
@@ -38,22 +39,29 @@ public class OrderService {
             throw new BadOrderException("FilmShowId cannot be null");
         });
 
-        List<Ticket> tickets = clientsOrder.getTickets();
+        Long promoOfferId = order.getPromoOfferId();
+        PromoOffer promoOffer = null;
+        if (promoOfferId != null) {
+            promoOffer = promoOfferRepository.findById(promoOfferId).orElseThrow(() -> {throw new BadOrderException("Invalid promo offer id");});
+        }
 
-        log.info("Tickets: ");
+
+        List<Ticket> tickets = new ArrayList<>();
+
         if (order.getChairs() != null) {
             for (Chair chair : order.getChairs()) {
                 Ticket ticket = new Ticket();
                 ticket.setChair(chair);
                 ticket.setFilmShow(filmShow);
+                ticket.setPromoOffer(promoOffer);
                 tickets.add(ticket);
-                //TODO set promo offer
             }
         }
+        clientsOrder.setTickets(tickets);
 
         clientsOrder.setAmount(calculateTotalCost(order));
 
-        return clientsOrderRepository.save(clientsOrder);
+        return PlacedOrder.of(clientsOrderRepository.save(clientsOrder));
     }
 
     private double calculateTotalCost(Order order) {
@@ -69,7 +77,7 @@ public class OrderService {
 
         List<OrderProductCost> orderCosts = calculateTicketPrices(order, discount);
 
-        if (!order.getFoodOrderItems().isEmpty()) {
+        if (order.getFoodOrderItems() != null) {
             orderCosts.addAll(calculateFoodProductsPrices(order, discount));
         }
 
