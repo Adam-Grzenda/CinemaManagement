@@ -5,4 +5,6 @@ import pl.put.CinemaManagement.model.Film;
 
 
 public interface FilmRepository extends CrudRepository<Film, Long> {
+
+    Film getFilmByTitle(String title);
 }
