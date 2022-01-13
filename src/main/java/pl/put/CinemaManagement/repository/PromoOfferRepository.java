@@ -4,4 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 import pl.put.CinemaManagement.model.PromoOffer;
 
 public interface PromoOfferRepository extends CrudRepository<PromoOffer, Long> {
+
+    PromoOffer findPromoOfferByName (String name);
 }
