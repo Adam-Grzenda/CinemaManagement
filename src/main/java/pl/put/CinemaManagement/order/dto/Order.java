@@ -9,10 +9,8 @@ import java.util.List;
 @ToString
 @Data
 public class Order {
-    private Long userId;
     private List<Chair> chairs;
     private List<FoodOrderItem> foodOrderItems;
     private Long filmShowId;
-
     private Long promoOfferId;
 }

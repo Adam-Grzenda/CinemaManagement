@@ -2,14 +2,10 @@ package pl.put.CinemaManagement.order.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
-import org.keycloak.representations.AccessToken;
 import org.springframework.stereotype.Service;
 import pl.put.CinemaManagement.model.*;
-import pl.put.CinemaManagement.order.dto.FoodOrderItem;
-import pl.put.CinemaManagement.order.dto.Order;
-import pl.put.CinemaManagement.order.dto.OrderProductCost;
-import pl.put.CinemaManagement.order.dto.PlacedOrder;
+import pl.put.CinemaManagement.model.Ticket;
+import pl.put.CinemaManagement.order.dto.*;
 import pl.put.CinemaManagement.order.exception.BadOrderException;
 import pl.put.CinemaManagement.repository.*;
 
@@ -24,27 +20,17 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final ClientsOrderRepository clientsOrderRepository;
-    private final ClientRepository clientRepository;
     private final FilmShowRepository filmShowRepository;
     private final BasePriceRepository priceRepository;
     private final PromoOfferRepository promoOfferRepository;
+    private final UserService userService;
 
 
     public PlacedOrder placeOrder(Order order, Principal principal) {
         log.info(order.toString());
-        KeycloakAuthenticationToken keycloakToken = (KeycloakAuthenticationToken) principal;
-        AccessToken accessToken = keycloakToken.getAccount().getKeycloakSecurityContext().getToken();
 
         ClientsOrder clientsOrder = new ClientsOrder();
-        String externalId = accessToken.getSubject();
-        log.info("Place order user Id: " + externalId);
-
-        Client client = clientRepository.getClientByExternalId(externalId).orElseGet(
-                () ->
-                        clientRepository.save(Client.fromExternalId(externalId, accessToken.getName()))
-        );
-
-        clientsOrder.setClient(client);
+        clientsOrder.setClient(userService.getClientFromProvider(principal));
 
         FilmShow filmShow = filmShowRepository.findById(order.getFilmShowId()).orElseThrow(() -> {
             throw new BadOrderException("FilmShowId cannot be null");
@@ -75,6 +61,12 @@ public class OrderService {
 
         return PlacedOrder.of(clientsOrderRepository.save(clientsOrder));
     }
+
+    public List<OrderDisplay> getOrdersForUser(Principal principal) {
+
+        return List.of();
+    }
+
 
     private double calculateTotalCost(Order order) {
         return this.calculateOrderCost(order).stream()
@@ -144,4 +136,6 @@ public class OrderService {
 
         return productCostDTO;
     }
+
+
 }
