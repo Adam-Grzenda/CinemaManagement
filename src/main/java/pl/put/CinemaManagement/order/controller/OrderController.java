@@ -22,7 +22,7 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @RolesAllowed("cinema-user")
+    @RolesAllowed("user")
     @PostMapping(value = "/placeOrder")
     PlacedOrder placeOrder(@RequestBody Order order) {
         return orderService.placeOrder(order);
