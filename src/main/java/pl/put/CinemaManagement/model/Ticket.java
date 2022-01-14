@@ -20,6 +20,9 @@ import javax.persistence.*;
                 {"film_show_id", "chair_id"}))
 public class Ticket extends CinemaEntity {
 
+    @Column(name = "price")
+    private float price;
+
     @ManyToOne
     @NotNull //#TODO czy na pewno?
     @JoinColumn(name = "clients_order_id",

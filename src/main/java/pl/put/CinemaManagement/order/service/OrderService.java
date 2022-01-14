@@ -12,6 +12,7 @@ import pl.put.CinemaManagement.repository.*;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -46,6 +47,11 @@ public class OrderService {
 
         List<Ticket> tickets = new ArrayList<>();
 
+        float discount = promoOffer != null ? promoOffer.getDiscount() : 0;
+
+        Map<String, Float> ticketPrices = this.calculateTicketPrices(order, discount).stream()
+                .collect(Collectors.toMap(OrderProductCost::getSubtype, OrderProductCost::getFinalPrice));
+
         if (order.getChairs() != null) {
             for (Chair chair : order.getChairs()) {
                 log.info(chair.toString());
@@ -54,6 +60,7 @@ public class OrderService {
                 ticket.setFilmShow(filmShow);
                 ticket.setPromoOffer(promoOffer);
                 ticket.setClientsOrder(clientsOrder);
+                ticket.setPrice(ticketPrices.get(chair.getChairType().toString()));
                 tickets.add(ticket);
             }
         }
@@ -137,7 +144,7 @@ public class OrderService {
                 ).getBasePrice();
 
         productCostDTO.setBasePrice(basePrice);
-        productCostDTO.setFinalPrice(basePrice - basePrice * discount);
+        productCostDTO.setFinalPrice(basePrice * (100 - discount) / 100);
 
         return productCostDTO;
     }
