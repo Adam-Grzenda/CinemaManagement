@@ -9,6 +9,7 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.sql.Date;
 
 @Getter
@@ -16,8 +17,9 @@ import java.sql.Date;
 @NoArgsConstructor
 @Entity
 @Table(
-        name = "film"
-)
+        name = "film",
+        uniqueConstraints = @UniqueConstraint(
+                columnNames = {"title"}))
 public class Film extends CinemaEntity {
 
     @Column(name = "title")
@@ -46,10 +48,10 @@ public class Film extends CinemaEntity {
     @NotNull
     private Date premiereDate;
 
-    @Column(name = "description", columnDefinition="TEXT")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "image_source", columnDefinition="TEXT")
+    @Column(name = "image_source", columnDefinition = "TEXT")
     private String imageSource;
 
 }

@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface CinemaRepository extends CrudRepository<Cinema, Long> {
 
-    List<Cinema> findCinemaByName(String name);
+    Cinema findCinemaByName(String name);
 
 }

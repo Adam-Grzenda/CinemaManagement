@@ -13,9 +13,14 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(
-        name = "food_court"
-)
+        name = "food_court",
+        uniqueConstraints =
+        @UniqueConstraint(columnNames = {"name", "cinema_id"}))
 public class FoodCourt extends CinemaEntity {
+
+    @Column(name = "name")
+    @NotNull
+    private String name;
 
     @Column(name = "checkout_number")
     @NotNull

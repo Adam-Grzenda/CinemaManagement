@@ -14,7 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(
-        name = "product_type" )
+        name = "product_type",
+        uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class ProductType extends CinemaEntity {
 
     @Column(name = "name")

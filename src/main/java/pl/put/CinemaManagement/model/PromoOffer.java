@@ -14,7 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(
-        name = "promo_offer")
+        name = "promo_offer",
+        uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class PromoOffer extends CinemaEntity {
 
     @Column(name = "name")
