@@ -20,7 +20,7 @@ public class ClientsOrder extends CinemaEntity {
         CASH, CREDIT_CARD, DEBT_CARD, ONLINE_PAYMENT
     }
 
-    private enum PaymentStatus {
+    public enum PaymentStatus {
         OPEN, IN_PROCESS, FAILED, CLOSED
     }
 
@@ -55,4 +55,11 @@ public class ClientsOrder extends CinemaEntity {
     @OneToMany(mappedBy = "clientsOrder", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     List<Ticket> tickets;
 
+    public void updatePaymentState(PaymentStatus requestedStatus) throws IllegalStateException{
+        if (this.paymentStatus.compareTo(requestedStatus) > 0) {
+            throw new IllegalStateException("Requested state is invalid");
+        } else {
+            this.paymentStatus = requestedStatus;
+        }
+    }
 }

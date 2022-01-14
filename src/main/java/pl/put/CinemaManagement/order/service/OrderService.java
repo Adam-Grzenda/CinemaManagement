@@ -79,6 +79,28 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    public PlacedOrder updateOrderState(OrderStateRequest stateRequest, Principal principal) {
+        ClientsOrder clientsOrder = clientsOrderRepository.findClientsOrderByClientAndId(
+                userService.getClientFromProvider(principal), stateRequest.getOrderId())
+                .orElseThrow(() -> {throw new BadOrderException("Order for given Id does not exist");});
+
+        /*
+        Normally we would get the payment status update from the payment gateway,
+        however for the sole purpose of demonstration we're basically trusting the client
+        TODO - implement a microservice mocking the payment provider
+         */
+
+        try {
+            ClientsOrder.PaymentStatus requestedStatus = ClientsOrder.PaymentStatus.valueOf(stateRequest.getNewState());
+            clientsOrder.updatePaymentState(requestedStatus);
+        } catch (IllegalStateException exception) {
+            log.error("Order payment status update failed");
+            return PlacedOrder.failed(clientsOrder);
+        }
+
+        return PlacedOrder.of(clientsOrderRepository.save(clientsOrder));
+    }
+
 
     private double calculateTotalCost(Order order) {
         return this.calculateOrderCost(order).stream()

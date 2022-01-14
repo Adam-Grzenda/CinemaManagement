@@ -3,10 +3,7 @@ package pl.put.CinemaManagement.order.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import pl.put.CinemaManagement.order.dto.Order;
-import pl.put.CinemaManagement.order.dto.OrderDisplay;
-import pl.put.CinemaManagement.order.dto.OrderProductCost;
-import pl.put.CinemaManagement.order.dto.PlacedOrder;
+import pl.put.CinemaManagement.order.dto.*;
 import pl.put.CinemaManagement.order.service.OrderService;
 
 import javax.annotation.security.RolesAllowed;
@@ -38,4 +35,9 @@ public class OrderController {
         return orderService.getOrdersForUser(principal);
     }
 
+    @RolesAllowed("user")
+    @PostMapping(value = "/updateOrderState")
+    PlacedOrder updateOrderState(@RequestBody OrderStateRequest stateRequest, Principal principal) {
+        return orderService.updateOrderState(stateRequest, principal);
+    }
 }
