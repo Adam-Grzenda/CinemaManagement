@@ -15,7 +15,7 @@ import java.util.List;
 @Table(
         name = "food_court",
         uniqueConstraints =
-        @UniqueConstraint(columnNames = "name"))
+        @UniqueConstraint(columnNames = {"name", "cinema_id"}))
 public class FoodCourt extends CinemaEntity {
 
     @Column(name = "name")

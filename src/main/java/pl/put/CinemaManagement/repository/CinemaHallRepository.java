@@ -9,5 +9,5 @@ public interface CinemaHallRepository extends CrudRepository<CinemaHall, Long> {
 
     List<CinemaHall> findCinemaHallsByCinema_Name(String name);
 
-    List<CinemaHall> findCinemaHallsByCinema_Id(Long id);
+    List<CinemaHall> findAllByCinema_Id(Long cinemaId);
 }

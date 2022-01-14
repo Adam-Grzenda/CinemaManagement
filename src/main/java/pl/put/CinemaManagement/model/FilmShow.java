@@ -25,7 +25,7 @@ import java.util.List;
 // moze pola start i end i trigger ustawiajacy end na start+film.duration?
 public class FilmShow extends CinemaEntity {
     private enum FilmShowType {
-        IMAX, TWO_DIM, THREE_DIM
+        IMAX, TWO_DIM, THREE_DIM, FIVE_DIM
     }
 
     @Column(name = "date")
@@ -36,7 +36,7 @@ public class FilmShow extends CinemaEntity {
     @ColumnDefault(value = "'TWO_DIM'")
     @NotNull
     @Enumerated(EnumType.STRING)
-    private FilmShowType filmShowType;
+    private FilmShowType type;
 
     @ManyToOne
     @NotNull
