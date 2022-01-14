@@ -4,10 +4,9 @@ import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.sql.Date;
 import java.util.List;
 
 @Getter
@@ -31,7 +30,7 @@ public class ClientsOrder extends CinemaEntity {
 
     @Column(name = "date")
     @NotNull
-    private Timestamp date;
+    private Date date;
 
     @Column(name = "payment_type")
     @NotNull

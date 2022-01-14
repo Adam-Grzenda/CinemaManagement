@@ -63,8 +63,10 @@ public class OrderService {
     }
 
     public List<OrderDisplay> getOrdersForUser(Principal principal) {
-
-        return List.of();
+        Client client = userService.getClientFromProvider(principal);
+        return clientsOrderRepository.getClientsOrderByClient(client)
+                .stream().map(OrderDisplay::fromClientsOrder)
+                .collect(Collectors.toList());
     }
 
 
