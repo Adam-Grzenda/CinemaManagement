@@ -12,6 +12,7 @@ import pl.put.CinemaManagement.order.dto.PlacedOrder;
 import pl.put.CinemaManagement.order.service.OrderService;
 
 import javax.annotation.security.RolesAllowed;
+import java.security.Principal;
 import java.util.List;
 
 @Slf4j
@@ -24,8 +25,8 @@ public class OrderController {
 
     @RolesAllowed("user")
     @PostMapping(value = "/placeOrder")
-    PlacedOrder placeOrder(@RequestBody Order order) {
-        return orderService.placeOrder(order);
+    PlacedOrder placeOrder(@RequestBody Order order, Principal principal) {
+        return orderService.placeOrder(order, principal);
     }
 
     @PostMapping(value = "/calculateOrder")

@@ -2,6 +2,8 @@ package pl.put.CinemaManagement.order.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
+import org.keycloak.representations.AccessToken;
 import org.springframework.stereotype.Service;
 import pl.put.CinemaManagement.model.*;
 import pl.put.CinemaManagement.order.dto.FoodOrderItem;
@@ -11,6 +13,7 @@ import pl.put.CinemaManagement.order.dto.PlacedOrder;
 import pl.put.CinemaManagement.order.exception.BadOrderException;
 import pl.put.CinemaManagement.repository.*;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,13 +29,21 @@ public class OrderService {
     private final BasePriceRepository priceRepository;
     private final PromoOfferRepository promoOfferRepository;
 
-    public PlacedOrder placeOrder(Order order) {
-        log.info(order.toString());
-        ClientsOrder clientsOrder = new ClientsOrder();
 
-        Client client = clientRepository.findById(order.getUserId()).orElseThrow(() -> {
-            throw new BadOrderException("User ID cannot be null");
-        });
+    public PlacedOrder placeOrder(Order order, Principal principal) {
+        log.info(order.toString());
+        KeycloakAuthenticationToken keycloakToken = (KeycloakAuthenticationToken) principal;
+        AccessToken accessToken = keycloakToken.getAccount().getKeycloakSecurityContext().getToken();
+
+        ClientsOrder clientsOrder = new ClientsOrder();
+        String externalId = accessToken.getSubject();
+        log.info("Place order user Id: " + externalId);
+
+        Client client = clientRepository.getClientByExternalId(externalId).orElseGet(
+                () ->
+                        clientRepository.save(Client.fromExternalId(externalId, accessToken.getName()))
+        );
+
         clientsOrder.setClient(client);
 
         FilmShow filmShow = filmShowRepository.findById(order.getFilmShowId()).orElseThrow(() -> {
@@ -42,9 +53,10 @@ public class OrderService {
         Long promoOfferId = order.getPromoOfferId();
         PromoOffer promoOffer = null;
         if (promoOfferId != null) {
-            promoOffer = promoOfferRepository.findById(promoOfferId).orElseThrow(() -> {throw new BadOrderException("Invalid promo offer id");});
+            promoOffer = promoOfferRepository.findById(promoOfferId).orElseThrow(() -> {
+                throw new BadOrderException("Invalid promo offer id");
+            });
         }
-
 
         List<Ticket> tickets = new ArrayList<>();
 
@@ -96,7 +108,6 @@ public class OrderService {
             return 0;
         }
     }
-
 
     //TODO common interface for these product types would be useful
     private List<OrderProductCost> calculateTicketPrices(Order order, float discount) {
