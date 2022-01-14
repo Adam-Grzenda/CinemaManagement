@@ -48,13 +48,16 @@ public class OrderService {
 
         if (order.getChairs() != null) {
             for (Chair chair : order.getChairs()) {
+                log.info(chair.toString());
                 Ticket ticket = new Ticket();
                 ticket.setChair(chair);
                 ticket.setFilmShow(filmShow);
                 ticket.setPromoOffer(promoOffer);
+                ticket.setClientsOrder(clientsOrder);
                 tickets.add(ticket);
             }
         }
+
         clientsOrder.setTickets(tickets);
 
         clientsOrder.setAmount(calculateTotalCost(order));

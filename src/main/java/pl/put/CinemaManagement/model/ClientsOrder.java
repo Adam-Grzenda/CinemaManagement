@@ -52,7 +52,7 @@ public class ClientsOrder extends CinemaEntity {
             referencedColumnName = "id")
     private Client client;
 
-    @OneToMany(mappedBy = "clientsOrder")
+    @OneToMany(mappedBy = "clientsOrder", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     List<Ticket> tickets;
 
 }
