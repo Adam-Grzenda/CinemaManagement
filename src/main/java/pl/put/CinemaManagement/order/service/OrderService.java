@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.put.CinemaManagement.model.*;
-import pl.put.CinemaManagement.model.Ticket;
 import pl.put.CinemaManagement.order.dto.*;
 import pl.put.CinemaManagement.order.exception.BadOrderException;
-import pl.put.CinemaManagement.repository.*;
+import pl.put.CinemaManagement.repository.BasePriceRepository;
+import pl.put.CinemaManagement.repository.ClientsOrderRepository;
+import pl.put.CinemaManagement.repository.FilmShowRepository;
+import pl.put.CinemaManagement.repository.PromoOfferRepository;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -81,8 +83,10 @@ public class OrderService {
 
     public PlacedOrder updateOrderState(OrderStateRequest stateRequest, Principal principal) {
         ClientsOrder clientsOrder = clientsOrderRepository.findClientsOrderByClientAndId(
-                userService.getClientFromProvider(principal), stateRequest.getOrderId())
-                .orElseThrow(() -> {throw new BadOrderException("Order for given Id does not exist");});
+                        userService.getClientFromProvider(principal), stateRequest.getOrderId())
+                .orElseThrow(() -> {
+                    throw new BadOrderException("Order for given Id does not exist");
+                });
 
         /*
         Normally we would get the payment status update from the payment gateway,
@@ -171,5 +175,14 @@ public class OrderService {
         return productCostDTO;
     }
 
+    public PlacedOrder realizeOrder(Long id) {
+        ClientsOrder clientsOrder = clientsOrderRepository.findById(id)
+                .orElseThrow(() -> {
+                    throw new BadOrderException("Invalid orderId");
+                });
 
+        clientsOrder.realizeOrder();
+
+        return PlacedOrder.of(clientsOrderRepository.save(clientsOrder));
+    }
 }

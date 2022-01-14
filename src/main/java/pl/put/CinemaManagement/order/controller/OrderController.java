@@ -40,4 +40,10 @@ public class OrderController {
     PlacedOrder updateOrderState(@RequestBody OrderStateRequest stateRequest, Principal principal) {
         return orderService.updateOrderState(stateRequest, principal);
     }
+
+    @RolesAllowed("admin")
+    @PostMapping(value = "/realizeOrder/{id}")
+    PlacedOrder realizeOrder(@PathVariable Long id) {
+        return orderService.realizeOrder(id);
+    }
 }

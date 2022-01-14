@@ -4,6 +4,8 @@ import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.put.CinemaManagement.order.exception.InvalidPaymentStatusException;
+import pl.put.CinemaManagement.order.exception.OrderAlreadyRealizedException;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -21,7 +23,7 @@ public class ClientsOrder extends CinemaEntity {
     }
 
     public enum PaymentStatus {
-        OPEN, IN_PROCESS, FAILED, CLOSED
+        OPEN, IN_PROCESS, FAILED, CLOSED, CANCELLED
     }
 
     @Column(name = "realized")
@@ -57,9 +59,21 @@ public class ClientsOrder extends CinemaEntity {
 
     public void updatePaymentState(PaymentStatus requestedStatus) throws IllegalStateException{
         if (this.paymentStatus.compareTo(requestedStatus) > 0) {
-            throw new IllegalStateException("Requested state is invalid");
+            throw new InvalidPaymentStatusException("Requested state is invalid");
         } else {
             this.paymentStatus = requestedStatus;
+        }
+    }
+
+    public void realizeOrder() {
+        if (this.paymentStatus != PaymentStatus.CLOSED) {
+            throw new InvalidPaymentStatusException("Order payment state isn't CLOSED");
+        }
+
+        if (this.realized) {
+            throw new OrderAlreadyRealizedException();
+        } else {
+            this.realized = true;
         }
     }
 }
