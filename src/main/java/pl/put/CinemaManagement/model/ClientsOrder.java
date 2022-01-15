@@ -4,6 +4,7 @@ import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -29,6 +30,7 @@ public class ClientsOrder extends CinemaEntity {
     private boolean realized;
 
     @Column(name = "date")
+
     @NotNull
     private Date date;
 
@@ -38,6 +40,7 @@ public class ClientsOrder extends CinemaEntity {
     private PaymentType paymentType;
 
     @Column(name = "payment_status")
+    @ColumnDefault(value = "'OPEN'")
     @NotNull
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;

@@ -39,11 +39,6 @@ public class Film extends CinemaEntity {
     @NotNull
     private boolean is3D;
 
-    @Column(name = "license_to")
-    @ColumnDefault("'2200-12-31'")
-    @NotNull
-    private Date licenseTo;
-
     @Column(name = "premiere_date")
     @NotNull
     private Date premiereDate;

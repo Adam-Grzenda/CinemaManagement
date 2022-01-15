@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -34,6 +35,7 @@ public class Chair extends CinemaEntity {
     private int hallColumn;
 
     @Column(name = "chair_type")
+    @ColumnDefault(value = "'NORMAL'")
     @Enumerated(EnumType.STRING)
     private ChairTypes chairType;
 
