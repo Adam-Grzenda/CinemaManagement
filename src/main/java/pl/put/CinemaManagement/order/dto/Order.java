@@ -13,4 +13,6 @@ public class Order {
     private List<FoodOrderItem> foodOrderItems;
     private Long filmShowId;
     private Long promoOfferId;
+    private String paymentType;
+    private String paymentStatus;
 }

@@ -18,7 +18,7 @@ import java.util.List;
 @Table(
         name = "clients_order")
 public class ClientsOrder extends CinemaEntity {
-    private enum PaymentType {
+    public enum PaymentType {
         CASH, CREDIT_CARD, DEBT_CARD, ONLINE_PAYMENT
     }
 

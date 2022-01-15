@@ -34,6 +34,8 @@ public class OrderService {
 
         ClientsOrder clientsOrder = new ClientsOrder();
         clientsOrder.setClient(userService.getClientFromProvider(principal));
+        clientsOrder.setPaymentType(ClientsOrder.PaymentType.valueOf(order.getPaymentType()));
+        clientsOrder.setPaymentStatus(ClientsOrder.PaymentStatus.valueOf(order.getPaymentStatus()));
 
         FilmShow filmShow = filmShowRepository.findById(order.getFilmShowId()).orElseThrow(() -> {
             throw new BadOrderException("FilmShowId cannot be null");
