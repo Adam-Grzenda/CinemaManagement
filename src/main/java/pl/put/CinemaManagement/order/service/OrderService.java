@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.put.CinemaManagement.model.*;
-import pl.put.CinemaManagement.model.Ticket;
 import pl.put.CinemaManagement.order.dto.*;
 import pl.put.CinemaManagement.order.exception.BadOrderException;
-import pl.put.CinemaManagement.repository.*;
+import pl.put.CinemaManagement.repository.BasePriceRepository;
+import pl.put.CinemaManagement.repository.ClientsOrderRepository;
+import pl.put.CinemaManagement.repository.FilmShowRepository;
+import pl.put.CinemaManagement.repository.PromoOfferRepository;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -32,6 +34,8 @@ public class OrderService {
 
         ClientsOrder clientsOrder = new ClientsOrder();
         clientsOrder.setClient(userService.getClientFromProvider(principal));
+        clientsOrder.setPaymentType(ClientsOrder.PaymentType.valueOf(order.getPaymentType()));
+        clientsOrder.setPaymentStatus(ClientsOrder.PaymentStatus.valueOf(order.getPaymentStatus()));
 
         FilmShow filmShow = filmShowRepository.findById(order.getFilmShowId()).orElseThrow(() -> {
             throw new BadOrderException("FilmShowId cannot be null");
@@ -77,6 +81,30 @@ public class OrderService {
         return clientsOrderRepository.getClientsOrderByClient(client)
                 .stream().map(OrderDisplay::fromClientsOrder)
                 .collect(Collectors.toList());
+    }
+
+    public PlacedOrder updateOrderState(OrderStateRequest stateRequest, Principal principal) {
+        ClientsOrder clientsOrder = clientsOrderRepository.findClientsOrderByClientAndId(
+                        userService.getClientFromProvider(principal), stateRequest.getOrderId())
+                .orElseThrow(() -> {
+                    throw new BadOrderException("Order for given Id does not exist");
+                });
+
+        /*
+        Normally we would get the payment status update from the payment gateway,
+        however for the sole purpose of demonstration we're basically trusting the client
+        TODO - implement a microservice mocking the payment provider
+         */
+
+        try {
+            ClientsOrder.PaymentStatus requestedStatus = ClientsOrder.PaymentStatus.valueOf(stateRequest.getNewState());
+            clientsOrder.updatePaymentState(requestedStatus);
+        } catch (IllegalStateException exception) {
+            log.error("Order payment status update failed");
+            return PlacedOrder.failed(clientsOrder);
+        }
+
+        return PlacedOrder.of(clientsOrderRepository.save(clientsOrder));
     }
 
 
@@ -149,5 +177,14 @@ public class OrderService {
         return productCostDTO;
     }
 
+    public PlacedOrder realizeOrder(Long id) {
+        ClientsOrder clientsOrder = clientsOrderRepository.findById(id)
+                .orElseThrow(() -> {
+                    throw new BadOrderException("Invalid orderId");
+                });
 
+        clientsOrder.realizeOrder();
+
+        return PlacedOrder.of(clientsOrderRepository.save(clientsOrder));
+    }
 }

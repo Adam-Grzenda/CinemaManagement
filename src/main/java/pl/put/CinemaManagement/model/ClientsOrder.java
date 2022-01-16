@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import pl.put.CinemaManagement.order.exception.InvalidPaymentStatusException;
+import pl.put.CinemaManagement.order.exception.OrderAlreadyRealizedException;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -17,12 +19,12 @@ import java.util.List;
 @Table(
         name = "clients_order")
 public class ClientsOrder extends CinemaEntity {
-    private enum PaymentType {
+    public enum PaymentType {
         CASH, CREDIT_CARD, DEBT_CARD, ONLINE_PAYMENT
     }
 
-    private enum PaymentStatus {
-        OPEN, IN_PROCESS, FAILED, CLOSED
+    public enum PaymentStatus {
+        OPEN, IN_PROCESS, FAILED, CLOSED, CANCELLED
     }
 
     @Column(name = "realized")
@@ -30,7 +32,6 @@ public class ClientsOrder extends CinemaEntity {
     private boolean realized;
 
     @Column(name = "date")
-
     @NotNull
     private Date date;
 
@@ -58,4 +59,23 @@ public class ClientsOrder extends CinemaEntity {
     @OneToMany(mappedBy = "clientsOrder", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     List<Ticket> tickets;
 
+    public void updatePaymentState(PaymentStatus requestedStatus) throws IllegalStateException{
+        if (this.paymentStatus.compareTo(requestedStatus) > 0) {
+            throw new InvalidPaymentStatusException("Requested state is invalid");
+        } else {
+            this.paymentStatus = requestedStatus;
+        }
+    }
+
+    public void realizeOrder() {
+        if (this.paymentStatus != PaymentStatus.CLOSED) {
+            throw new InvalidPaymentStatusException("Order payment state isn't CLOSED");
+        }
+
+        if (this.realized) {
+            throw new OrderAlreadyRealizedException();
+        } else {
+            this.realized = true;
+        }
+    }
 }
