@@ -5,11 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 import pl.put.CinemaManagement.order.exception.InvalidPaymentStatusException;
 import pl.put.CinemaManagement.order.exception.OrderAlreadyRealizedException;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Getter
@@ -31,9 +33,10 @@ public class ClientsOrder extends CinemaEntity {
     @NotNull
     private boolean realized;
 
+    @CreationTimestamp
     @Column(name = "date")
     @NotNull
-    private Date date;
+    private Timestamp date;
 
     @Column(name = "payment_type")
     @NotNull

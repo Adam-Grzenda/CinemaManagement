@@ -13,9 +13,11 @@ import java.sql.Date;
 public class TicketDisplay {
     private Integer hallRow;
     private Integer hallColumn;
+    private Integer hallNumber;
+    private String cinemaName;
     private Float discount;
     private Double basePrice;
-    private Double finalPrice;
+    private Float finalPrice;
     private String filmShowTitle;
     private Date filmShowDate;
 
@@ -26,7 +28,16 @@ public class TicketDisplay {
 
         ticketDisplay.setHallColumn(chair.getHallColumn());
         ticketDisplay.setHallRow(chair.getHallRow());
-        ticketDisplay.setDiscount(ticket.getPromoOffer().getDiscount());
+        ticketDisplay.setFinalPrice(ticket.getPrice());
+        ticketDisplay.setHallNumber(chair.getCinemaHall().getNumber());
+        ticketDisplay.setCinemaName(chair.getCinemaHall().getCinema().getName());
+
+        if (ticket.getPromoOffer() != null) {
+            ticketDisplay.setDiscount(ticket.getPromoOffer().getDiscount());
+        } else {
+            ticketDisplay.setDiscount(0F);
+        }
+
 
         FilmShow filmShow = ticket.getFilmShow();
 
