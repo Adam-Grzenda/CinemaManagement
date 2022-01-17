@@ -43,12 +43,7 @@ public class TicketDisplay {
 
         ticketDisplay.setFilmShowTitle(filmShow.getFilm().getTitle());
         ticketDisplay.setFilmShowDate(filmShow.getDate());
-        /*
-        TODO
-        setting prices - currently base prices for chairs are stored in separate relation
-        getting it for every ticket seems wrong - as the price may change over time
-        Ticket should probably store its own price, as well as discounts etc.
-         */
+        ticketDisplay.setFinalPrice(ticket.getPrice());
 
         return ticketDisplay;
     }
