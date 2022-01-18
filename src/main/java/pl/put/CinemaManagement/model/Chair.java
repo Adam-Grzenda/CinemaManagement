@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -42,5 +44,7 @@ public class Chair extends CinemaEntity {
     @JoinColumn(name = "cinema_hall_id",
             referencedColumnName = "id")
     @ManyToOne
+    @NotNull
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private CinemaHall cinemaHall;
 }

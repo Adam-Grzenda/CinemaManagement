@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -35,10 +37,10 @@ public class Ticket extends CinemaEntity {
             referencedColumnName = "id")
     private FilmShow filmShow;
 
-    @ManyToOne
-    @NotNull
     @PrimaryKeyJoinColumn(name = "chair_id",
             referencedColumnName = "id")
+    @ManyToOne
+    @NotNull
     private Chair chair;
 
     @ManyToOne
