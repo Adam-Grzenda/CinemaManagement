@@ -3,8 +3,10 @@ package pl.put.CinemaManagement.order.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import pl.put.CinemaManagement.model.Client;
 import pl.put.CinemaManagement.order.dto.*;
 import pl.put.CinemaManagement.order.service.OrderService;
+import pl.put.CinemaManagement.order.service.UserService;
 
 import javax.annotation.security.RolesAllowed;
 import java.security.Principal;
@@ -17,11 +19,13 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final UserService userService;
 
     @RolesAllowed("user")
     @PostMapping(value = "/placeOrder")
     PlacedOrder placeOrder(@RequestBody Order order, Principal principal) {
-        return orderService.placeOrder(order, principal);
+        Client client = userService.getClientFromProvider(principal);
+        return PlacedOrder.of(orderService.placeOrder(order, client));
     }
 
     @PostMapping(value = "/calculateOrder")
@@ -32,13 +36,15 @@ public class OrderController {
     @RolesAllowed("user")
     @GetMapping(value = "/getUserOrders")
     List<OrderDisplay> getUserOrders(Principal principal) {
-        return orderService.getOrdersForUser(principal);
+        Client client = userService.getClientFromProvider(principal);
+        return orderService.getOrdersForUser(client);
     }
 
     @RolesAllowed("user")
     @PostMapping(value = "/updateOrderState")
     PlacedOrder updateOrderState(@RequestBody OrderStateRequest stateRequest, Principal principal) {
-        return orderService.updateOrderState(stateRequest, principal);
+        Client client = userService.getClientFromProvider(principal);
+        return orderService.updateOrderState(stateRequest, client);
     }
 
     @RolesAllowed("admin")

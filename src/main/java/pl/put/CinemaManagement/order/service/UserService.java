@@ -15,7 +15,7 @@ import java.security.Principal;
 public class UserService {
     private final ClientRepository clientRepository;
 
-    Client getClientFromProvider(Principal principal) {
+    public Client getClientFromProvider(Principal principal) {
         AccessToken accessToken = getAccessToken(principal);
         String externalId = accessToken.getSubject();
         log.info("Retrieved user with external ID: : " + externalId);

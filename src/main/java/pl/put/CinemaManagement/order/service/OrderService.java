@@ -26,19 +26,18 @@ public class OrderService {
     private final FilmShowRepository filmShowRepository;
     private final BasePriceRepository priceRepository;
     private final PromoOfferRepository promoOfferRepository;
-    private final UserService userService;
 
 
-    public PlacedOrder placeOrder(Order order, Principal principal) {
+    public ClientsOrder placeOrder(Order order, Client client) {
         log.info(order.toString());
 
         ClientsOrder clientsOrder = new ClientsOrder();
-        clientsOrder.setClient(userService.getClientFromProvider(principal));
+        clientsOrder.setClient(client);
         clientsOrder.setPaymentType(ClientsOrder.PaymentType.valueOf(order.getPaymentType()));
         clientsOrder.setPaymentStatus(ClientsOrder.PaymentStatus.valueOf(order.getPaymentStatus()));
 
         FilmShow filmShow = filmShowRepository.findById(order.getFilmShowId()).orElseThrow(() -> {
-            throw new BadOrderException("FilmShowId cannot be null");
+            throw new BadOrderException("Invalid film show id");
         });
 
         Long promoOfferId = order.getPromoOfferId();
@@ -51,7 +50,8 @@ public class OrderService {
 
         List<Ticket> tickets = new ArrayList<>();
 
-        float discount = promoOffer != null ? promoOffer.getDiscount() : 0;
+        float discount = promoOffer != null ? promoOffer.getDiscount() : 0; //TODO Check if the client is eligible
+
 
         Map<String, Float> ticketPrices = this.calculateTicketPrices(order, discount).stream()
                 .collect(Collectors.toMap(OrderProductCost::getSubtype, OrderProductCost::getFinalPrice));
@@ -73,19 +73,18 @@ public class OrderService {
 
         clientsOrder.setAmount(calculateTotalCost(order));
 
-        return PlacedOrder.of(clientsOrderRepository.save(clientsOrder));
+        return clientsOrderRepository.save(clientsOrder);
     }
 
-    public List<OrderDisplay> getOrdersForUser(Principal principal) {
-        Client client = userService.getClientFromProvider(principal);
+    public List<OrderDisplay> getOrdersForUser(Client client) {
         return clientsOrderRepository.getClientsOrderByClient(client)
                 .stream().map(OrderDisplay::fromClientsOrder)
                 .collect(Collectors.toList());
     }
 
-    public PlacedOrder updateOrderState(OrderStateRequest stateRequest, Principal principal) {
+    public PlacedOrder updateOrderState(OrderStateRequest stateRequest, Client client) {
         ClientsOrder clientsOrder = clientsOrderRepository.findClientsOrderByClientAndId(
-                        userService.getClientFromProvider(principal), stateRequest.getOrderId())
+                        client, stateRequest.getOrderId())
                 .orElseThrow(() -> {
                     throw new BadOrderException("Order for given Id does not exist");
                 });
@@ -162,7 +161,7 @@ public class OrderService {
 
 
     private OrderProductCost getProductCost(String type, String subtype, float discount, Long itemCount) {
-        OrderProductCost productCostDTO = new OrderProductCost(type, subtype, discount, itemCount);
+        OrderProductCost productCost = new OrderProductCost(type, subtype, discount, itemCount);
 
         float basePrice = priceRepository.findByItemTypeAndItemSubtype(type, subtype)
                 .orElseThrow(
@@ -171,10 +170,10 @@ public class OrderService {
                         }
                 ).getBasePrice();
 
-        productCostDTO.setBasePrice(basePrice);
-        productCostDTO.setFinalPrice(basePrice * (100 - discount) / 100);
+        productCost.setBasePrice(basePrice);
+        productCost.setFinalPrice(basePrice * (100 - discount) / 100);
 
-        return productCostDTO;
+        return productCost;
     }
 
     public PlacedOrder realizeOrder(Long id) {
