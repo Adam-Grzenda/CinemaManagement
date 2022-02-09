@@ -1,6 +1,8 @@
 package pl.put.CinemaManagement.order.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.weaver.ast.Or;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import pl.put.CinemaManagement.model.*;
 import pl.put.CinemaManagement.order.dto.Order;
+import pl.put.CinemaManagement.order.exception.BadOrderException;
 import pl.put.CinemaManagement.repository.BasePriceRepository;
 import pl.put.CinemaManagement.repository.ClientsOrderRepository;
 import pl.put.CinemaManagement.repository.FilmShowRepository;
@@ -22,9 +25,10 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.notNull;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static pl.put.CinemaManagement.model.Chair.ChairTypes.NORMAL;
 import static pl.put.CinemaManagement.model.ClientsOrder.PaymentStatus.OPEN;
@@ -78,10 +82,9 @@ class OrderServiceTest {
         var client = createClient();
         var filmShow = createFilmShow();
         var promoOffer = createPromoOffer();
-        var chairs = cinema.getCinemaHalls().get(0).getChairs();
+        var chairs = getChairs();
 
         Order order = new Order();
-        order.setFoodOrderItems(List.of());
         order.setFilmShowId(filmId);
         order.setPromoOfferId(promoOfferId);
         order.setChairs(chairs);
@@ -118,25 +121,36 @@ class OrderServiceTest {
 
     @Test
     void shouldNotPlaceOrderWithInvalidFilm() {
-        Long filmId = 123L;
-        Long promoOfferId = 456L;
-        Date filmShowDate = Date.valueOf(LocalDate.now());
-        List<Chair> chairs = cinema.getCinemaHalls().get(0).getChairs();
-
-        FilmShow filmShow = new FilmShow();
-        filmShow.setDate(filmShowDate);
-
-        PromoOffer promoOffer = new PromoOffer();
-        promoOffer.setDiscount(10.0f);
+        var client = createClient();
+        var chairs = getChairs();
 
         Order order = new Order();
-        order.setFoodOrderItems(List.of());
-        order.setFilmShowId(filmId);
         order.setPromoOfferId(promoOfferId);
         order.setChairs(chairs);
         order.setPaymentType(DEBT_CARD.name());
         order.setPaymentStatus(OPEN.name());
 
+        when(filmShowRepository.findById(any())).thenReturn(Optional.empty());
+
+        Assert.assertThrows("Invalid film show id", BadOrderException.class, () -> orderService.placeOrder(order, client));
+    }
+
+    @Test
+    void shouldNotPlaceOrderWithInvalidPromoOffer() {
+        var client = createClient();
+        var chairs = getChairs();
+        var filmShow = createFilmShow();
+
+        Order order = new Order();
+        order.setPromoOfferId(promoOfferId);
+        order.setChairs(chairs);
+        order.setPaymentType(DEBT_CARD.name());
+        order.setPaymentStatus(OPEN.name());
+
+        when(filmShowRepository.findById(any())).thenReturn(Optional.of(filmShow));
+        when(promoOfferRepository.findById(any())).thenReturn(Optional.empty());
+
+        Assert.assertThrows("Invalid promo offer id", BadOrderException.class, () -> orderService.placeOrder(order, client));
     }
 
     @Test
@@ -211,5 +225,9 @@ class OrderServiceTest {
         basePrice.setItemType("Chair");
         basePrice.setItemSubtype(NORMAL.name());
         return basePrice;
+    }
+
+    private List<Chair> getChairs() {
+        return cinema.getCinemaHalls().get(0).getChairs();
     }
 }
