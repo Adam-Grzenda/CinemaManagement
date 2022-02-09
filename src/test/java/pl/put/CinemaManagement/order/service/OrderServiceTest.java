@@ -19,6 +19,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,6 +33,8 @@ import static pl.put.CinemaManagement.model.ClientsOrder.PaymentType.DEBT_CARD;
 @Slf4j
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
+    private final Random random = new Random();
+
     @Mock
     private ClientsOrderRepository orderRepository;
 
@@ -45,6 +48,12 @@ class OrderServiceTest {
     private PromoOfferRepository promoOfferRepository;
 
     private OrderService orderService;
+    private Cinema cinema;
+
+    private Long filmId;
+    private Long promoOfferId;
+
+    private BasePrice basePrice;
 
     @BeforeEach
     public void setup() {
@@ -55,17 +64,65 @@ class OrderServiceTest {
                 priceRepository,
                 promoOfferRepository
         );
+
+        this.cinema = createCinema();
+        this.basePrice = createBasePrice();
+
+        this.filmId = random.nextLong();
+        this.promoOfferId = random.nextLong();
     }
 
     @Test
     void shouldPlaceValidOrder() {
+
+        var client = createClient();
+        var filmShow = createFilmShow();
+        var promoOffer = createPromoOffer();
+        var chairs = cinema.getCinemaHalls().get(0).getChairs();
+
+        Order order = new Order();
+        order.setFoodOrderItems(List.of());
+        order.setFilmShowId(filmId);
+        order.setPromoOfferId(promoOfferId);
+        order.setChairs(chairs);
+        order.setPaymentType(DEBT_CARD.name());
+        order.setPaymentStatus(OPEN.name());
+
+        when(filmShowRepository.findById(filmId)).thenReturn(Optional.of(filmShow));
+        when(promoOfferRepository.findById(promoOfferId)).thenReturn(Optional.of(promoOffer));
+        when(priceRepository.findByItemTypeAndItemSubtype("Chair", NORMAL.name())).thenReturn(Optional.of(basePrice));
+        when(orderRepository.save(any())).thenAnswer((Answer<ClientsOrder>) invocationOnMock -> invocationOnMock.getArgument(0));
+
+        var clientsOrder = orderService.placeOrder(order, client);
+
+        assertEquals(client.getExternalId(), clientsOrder.getClient().getExternalId());
+        assertEquals(9f, clientsOrder.getAmount());
+        assertEquals(OPEN.name(), clientsOrder.getPaymentStatus().name());
+        assertEquals(DEBT_CARD, clientsOrder.getPaymentType());
+
+        var tickets = clientsOrder.getTickets();
+
+        chairs.forEach(
+                expectedChair -> assertTrue(tickets.stream().anyMatch(
+                        ticket ->
+                                ticket.getFilmShow().getDate().toLocalDate().isEqual(filmShow.getDate().toLocalDate())
+                                        &&
+                                        ticket.getChair().getHallColumn() == expectedChair.getHallColumn()
+                                        &&
+                                        ticket.getChair().getChairType() == expectedChair.getChairType()
+
+                ))
+        );
+
+    }
+
+    @Test
+    void shouldNotPlaceOrderWithInvalidFilm() {
         Long filmId = 123L;
         Long promoOfferId = 456L;
         Date filmShowDate = Date.valueOf(LocalDate.now());
+        List<Chair> chairs = cinema.getCinemaHalls().get(0).getChairs();
 
-        Cinema cinema = getCinema();
-
-        Chair chair = cinema.getCinemaHalls().get(0).getChairs().get(0);
         FilmShow filmShow = new FilmShow();
         filmShow.setDate(filmShowDate);
 
@@ -76,47 +133,9 @@ class OrderServiceTest {
         order.setFoodOrderItems(List.of());
         order.setFilmShowId(filmId);
         order.setPromoOfferId(promoOfferId);
-
-        order.setChairs(List.of(chair));
+        order.setChairs(chairs);
         order.setPaymentType(DEBT_CARD.name());
         order.setPaymentStatus(OPEN.name());
-
-        when(filmShowRepository.findById(filmId)).thenReturn(
-                Optional.of(filmShow)
-        );
-
-        when(promoOfferRepository.findById(promoOfferId)).thenReturn(
-                Optional.of(promoOffer)
-        );
-
-        BasePrice basePrice = new BasePrice();
-        basePrice.setBasePrice(10);
-        basePrice.setItemType("Chair");
-        basePrice.setItemSubtype(NORMAL.name());
-
-        when(priceRepository.findByItemTypeAndItemSubtype("Chair", NORMAL.name())).thenReturn(
-                Optional.of(basePrice)
-        );
-
-        when(orderRepository.save(any())).thenAnswer((Answer<ClientsOrder>) invocationOnMock -> invocationOnMock.getArgument(0));
-
-
-        Client client = getClient();
-        ClientsOrder clientsOrder = orderService.placeOrder(order, client);
-
-        assertEquals(client.getExternalId(), clientsOrder.getClient().getExternalId());
-        assertEquals(9f, clientsOrder.getAmount());
-        assertEquals(OPEN.name(), clientsOrder.getPaymentStatus().name());
-        assertEquals(DEBT_CARD, clientsOrder.getPaymentType());
-
-        clientsOrder.getTickets().forEach(
-                ticket -> {
-                    assertTrue(ticket.getFilmShow().getDate().toLocalDate().isEqual(filmShowDate.toLocalDate()));
-                    Chair ticketChair = ticket.getChair();
-                    assertEquals(ticketChair.getHallColumn(), chair.getHallColumn());
-                    assertEquals(ticketChair.getChairType(), chair.getChairType());
-                }
-        );
 
     }
 
@@ -137,7 +156,7 @@ class OrderServiceTest {
     }
 
 
-    private Cinema getCinema() {
+    private Cinema createCinema() {
         Cinema cinema = new Cinema();
 
         CinemaHall cinemaHall = new CinemaHall();
@@ -149,8 +168,15 @@ class OrderServiceTest {
         chair.setChairType(NORMAL);
         chair.setCinemaHall(cinemaHall);
 
-        cinemaHall.setChairs(List.of(chair));
-        cinemaHall.setNumber(1);
+        Chair chair2 = new Chair();
+        chair2.setHallColumn(2);
+        chair2.setHallRow(2);
+        chair2.setChairType(NORMAL);
+        chair2.setCinemaHall(cinemaHall);
+
+
+        cinemaHall.setChairs(List.of(chair, chair2));
+        cinemaHall.setNumber(2);
         cinemaHall.setType("NORMAL");
 
         cinema.setCinemaHalls(List.of(cinemaHall));
@@ -158,7 +184,7 @@ class OrderServiceTest {
         return cinema;
     }
 
-    public Client getClient() {
+    public Client createClient() {
         Client client = new Client();
         client.setClientSegments(List.of());
         client.setExternalId(UUID.randomUUID().toString());
@@ -167,5 +193,23 @@ class OrderServiceTest {
         return client;
     }
 
+    private FilmShow createFilmShow() {
+        FilmShow filmShow = new FilmShow();
+        filmShow.setDate(Date.valueOf(LocalDate.now()));
+        return filmShow;
+    }
 
+    private PromoOffer createPromoOffer() {
+        PromoOffer promoOffer = new PromoOffer();
+        promoOffer.setDiscount(10.0f);
+        return promoOffer;
+    }
+
+    private BasePrice createBasePrice() {
+        BasePrice basePrice = new BasePrice();
+        basePrice.setBasePrice(10);
+        basePrice.setItemType("Chair");
+        basePrice.setItemSubtype(NORMAL.name());
+        return basePrice;
+    }
 }
