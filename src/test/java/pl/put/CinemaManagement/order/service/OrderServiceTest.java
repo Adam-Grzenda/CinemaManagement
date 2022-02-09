@@ -1,7 +1,7 @@
 package pl.put.CinemaManagement.order.service;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.weaver.ast.Or;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,18 +19,17 @@ import pl.put.CinemaManagement.repository.FilmShowRepository;
 import pl.put.CinemaManagement.repository.PromoOfferRepository;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.notNull;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static pl.put.CinemaManagement.model.Chair.ChairTypes.NORMAL;
+import static pl.put.CinemaManagement.model.ClientsOrder.PaymentStatus.IN_PROCESS;
 import static pl.put.CinemaManagement.model.ClientsOrder.PaymentStatus.OPEN;
 import static pl.put.CinemaManagement.model.ClientsOrder.PaymentType.DEBT_CARD;
 
@@ -153,8 +152,44 @@ class OrderServiceTest {
         Assert.assertThrows("Invalid promo offer id", BadOrderException.class, () -> orderService.placeOrder(order, client));
     }
 
+    @SneakyThrows
     @Test
     void getOrdersForUser() {
+        var client = createClient();
+        var chairs = getChairs();
+        var filmShow = createFilmShow();
+
+        List<Ticket> tickets = createTickets(chairs, filmShow);
+        List<ClientsOrder> orders = new ArrayList<>();
+        List<String> orderTimestamps = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+            Timestamp orderTimestamp = Timestamp.valueOf(LocalDateTime.of(2021, random.nextInt(1, 10), 10, 10, 12));
+            orderTimestamps.add(orderTimestamp.toString());
+            orders.add(createOrder(client, tickets, orderTimestamp));
+        }
+
+        when(orderRepository.getClientsOrderByClient(client)).thenReturn(orders);
+
+        var orderDisplays = orderService.getOrdersForUser(client);
+
+        var displayTimestamps = orderDisplays.stream().map(a -> a.getOrderDate().toString()).toList();
+        assertTrue(orderTimestamps.containsAll(displayTimestamps));
+
+        var expectedPriceSum = tickets.stream().mapToDouble(Ticket::getPrice).sum();
+        assertTrue(orderDisplays.stream().allMatch(a -> a.getPrice() == expectedPriceSum && a.getPaymentStatus() == IN_PROCESS));
+
+    }
+
+    private ClientsOrder createOrder(Client client, List<Ticket> tickets, Timestamp date) {
+        ClientsOrder order = new ClientsOrder();
+        order.setTickets(tickets);
+        order.setPaymentStatus(IN_PROCESS);
+        order.setClient(client);
+        order.setAmount(tickets.stream().mapToDouble(Ticket::getPrice).sum());
+        order.setDate(date);
+
+        return order;
     }
 
     @Test
@@ -210,6 +245,11 @@ class OrderServiceTest {
     private FilmShow createFilmShow() {
         FilmShow filmShow = new FilmShow();
         filmShow.setDate(Date.valueOf(LocalDate.now()));
+
+        Film film = new Film();
+        film.setTitle(UUID.randomUUID().toString());
+
+        filmShow.setFilm(film);
         return filmShow;
     }
 
@@ -229,5 +269,15 @@ class OrderServiceTest {
 
     private List<Chair> getChairs() {
         return cinema.getCinemaHalls().get(0).getChairs();
+    }
+
+    private List<Ticket> createTickets(List<Chair> chairs, FilmShow filmShow) {
+        return chairs.stream().map(chair -> {
+            Ticket ticket = new Ticket();
+            ticket.setChair(chair);
+            ticket.setFilmShow(filmShow);
+            ticket.setPrice(random.nextFloat());
+            return ticket;
+        }).toList();
     }
 }

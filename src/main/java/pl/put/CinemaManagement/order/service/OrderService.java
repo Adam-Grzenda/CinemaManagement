@@ -11,7 +11,6 @@ import pl.put.CinemaManagement.repository.ClientsOrderRepository;
 import pl.put.CinemaManagement.repository.FilmShowRepository;
 import pl.put.CinemaManagement.repository.PromoOfferRepository;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
