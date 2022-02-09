@@ -14,7 +14,7 @@
 	<name>CinemaManagement</name>
 	<description>Project made for Database Systems classes at PUT</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 		<keycloak.version>16.0.0</keycloak.version>
 	</properties>
 	<dependencies>
