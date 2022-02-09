@@ -11,7 +11,9 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import pl.put.CinemaManagement.model.*;
+import pl.put.CinemaManagement.order.dto.FoodOrderItem;
 import pl.put.CinemaManagement.order.dto.Order;
+import pl.put.CinemaManagement.order.dto.OrderProductCost;
 import pl.put.CinemaManagement.order.exception.BadOrderException;
 import pl.put.CinemaManagement.repository.BasePriceRepository;
 import pl.put.CinemaManagement.repository.ClientsOrderRepository;
@@ -56,7 +58,8 @@ class OrderServiceTest {
     private Long filmId;
     private Long promoOfferId;
 
-    private BasePrice basePrice;
+    private BasePrice baseChairPrice;
+    private BasePrice baseFoodPrice;
 
     @BeforeEach
     public void setup() {
@@ -69,7 +72,8 @@ class OrderServiceTest {
         );
 
         this.cinema = createCinema();
-        this.basePrice = createBasePrice();
+        this.baseChairPrice = createBasePrice("Chair", NORMAL.name());
+        this.baseFoodPrice = createBasePrice("Food", NORMAL.name());
 
         this.filmId = random.nextLong();
         this.promoOfferId = random.nextLong();
@@ -92,7 +96,7 @@ class OrderServiceTest {
 
         when(filmShowRepository.findById(filmId)).thenReturn(Optional.of(filmShow));
         when(promoOfferRepository.findById(promoOfferId)).thenReturn(Optional.of(promoOffer));
-        when(priceRepository.findByItemTypeAndItemSubtype("Chair", NORMAL.name())).thenReturn(Optional.of(basePrice));
+        when(priceRepository.findByItemTypeAndItemSubtype("Chair", NORMAL.name())).thenReturn(Optional.of(baseChairPrice));
         when(orderRepository.save(any())).thenAnswer((Answer<ClientsOrder>) invocationOnMock -> invocationOnMock.getArgument(0));
 
         var clientsOrder = orderService.placeOrder(order, client);
@@ -193,11 +197,37 @@ class OrderServiceTest {
     }
 
     @Test
-    void updateOrderState() {
+    void shouldCalculateOrderCostWithValidPromoOffer() {
+        var promoOffer = createPromoOffer();
+        var chairs = getChairs();
+        var foods = createFoodItems(5);
+
+
+        Order order = new Order();
+        order.setPromoOfferId(promoOfferId);
+        order.setFoodOrderItems(foods);
+        order.setChairs(chairs);
+
+        when(promoOfferRepository.findById(promoOfferId)).thenReturn(Optional.of(promoOffer));
+        when(priceRepository.findByItemTypeAndItemSubtype("Chair", NORMAL.name())).thenReturn(Optional.of(baseChairPrice));
+        when(priceRepository.findByItemTypeAndItemSubtype("Food", NORMAL.name())).thenReturn(Optional.of(baseFoodPrice));
+
+        var costs = orderService.calculateOrderCost(order);
+
+        double expectedTotal = chairs.size() * baseChairPrice.getBasePrice() * (100-promoOffer.getDiscount())/100 + foods.size() * baseFoodPrice.getBasePrice() * (100-promoOffer.getDiscount())/100;
+        assertEquals(expectedTotal, costs.stream().mapToDouble(orderProductCost -> orderProductCost.getFinalPrice() * orderProductCost.getItemCount()).sum());
+
     }
 
-    @Test
-    void calculateOrderCost() {
+    private ArrayList<FoodOrderItem> createFoodItems(int count) {
+
+        ArrayList<FoodOrderItem> items = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            FoodOrderItem food = new FoodOrderItem();
+            food.setName(NORMAL.name());
+            items.add(food);
+        }
+        return items;
     }
 
     @Test
@@ -259,11 +289,11 @@ class OrderServiceTest {
         return promoOffer;
     }
 
-    private BasePrice createBasePrice() {
+    private BasePrice createBasePrice(String type, String subtype) {
         BasePrice basePrice = new BasePrice();
         basePrice.setBasePrice(10);
-        basePrice.setItemType("Chair");
-        basePrice.setItemSubtype(NORMAL.name());
+        basePrice.setItemType(type);
+        basePrice.setItemSubtype(subtype);
         return basePrice;
     }
 
