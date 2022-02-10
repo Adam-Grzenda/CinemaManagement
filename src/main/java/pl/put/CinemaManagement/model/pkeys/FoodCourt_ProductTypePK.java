@@ -2,13 +2,13 @@ package pl.put.CinemaManagement.model.pkeys;
 
 import lombok.Getter;
 import lombok.Setter;
-import pl.put.CinemaManagement.model.FoodCourt;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
-@Getter @Setter
+@Getter
+@Setter
 @Embeddable
 public class FoodCourt_ProductTypePK implements Serializable {
 

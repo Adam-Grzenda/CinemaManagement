@@ -10,13 +10,14 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import java.util.List;
 
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(
         name = "cinema_hall",
-        uniqueConstraints=
-            @UniqueConstraint(columnNames = {"number", "cinema_id"}))
+        uniqueConstraints =
+        @UniqueConstraint(columnNames = {"number", "cinema_id"}))
 public class CinemaHall extends CinemaEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)

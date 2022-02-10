@@ -110,7 +110,7 @@ public class OrderService {
 
     private double calculateTotalCost(Order order) {
         return this.calculateOrderCost(order).stream()
-                .collect(Collectors.summarizingDouble(a->a.getFinalPrice() * a.getItemCount()) ).getSum();
+                .collect(Collectors.summarizingDouble(a -> a.getFinalPrice() * a.getItemCount())).getSum();
     }
 
 

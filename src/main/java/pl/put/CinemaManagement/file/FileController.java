@@ -21,7 +21,7 @@ public class FileController {
     private final FileService fileService;
 
     @CrossOrigin(origins = "${angular.client}")
-    @PostMapping(value="/upload", produces= MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/upload", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> upload(@RequestPart MultipartFile image) {
         String randomObjectKey = UUID.randomUUID().toString();
         try {
@@ -33,7 +33,7 @@ public class FileController {
     }
 
     @CrossOrigin(origins = "${angular.client}")
-    @GetMapping(value="/file/{id}", produces= MediaType.IMAGE_PNG_VALUE)
+    @GetMapping(value = "/file/{id}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<?> getFile(@PathVariable String id) {
         try {
             return ResponseEntity.ok(fileService.get(id));
