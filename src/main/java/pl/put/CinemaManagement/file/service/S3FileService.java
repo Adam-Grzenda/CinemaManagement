@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import pl.put.CinemaManagement.file.exception.FileServiceException;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +37,7 @@ public class S3FileService implements FileService {
             FileUtils.copyInputStreamToFile(fileInputStream, tempFile);
             amazonS3.putObject(new PutObjectRequest(bucket, key, tempFile));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new FileServiceException(e.getMessage());
         } finally {
             if (tempFile.exists()) {
                 tempFile.delete();

@@ -14,14 +14,13 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:4200")
 @RestController
 public class OrderController {
 
     private final OrderService orderService;
     private final UserService userService;
 
-    @RolesAllowed("user")
+    @RolesAllowed("${user.role}")
     @PostMapping(value = "/placeOrder")
     PlacedOrder placeOrder(@RequestBody Order order, Principal principal) {
         Client client = userService.getClientFromProvider(principal);
@@ -33,21 +32,21 @@ public class OrderController {
         return orderService.calculateOrderCost(order);
     }
 
-    @RolesAllowed("user")
+    @RolesAllowed("${user.role}")
     @GetMapping(value = "/getUserOrders")
     List<OrderDisplay> getUserOrders(Principal principal) {
         Client client = userService.getClientFromProvider(principal);
         return orderService.getOrdersForUser(client);
     }
 
-    @RolesAllowed("user")
+    @RolesAllowed("${user.role}")
     @PostMapping(value = "/updateOrderState")
     PlacedOrder updateOrderState(@RequestBody OrderStateRequest stateRequest, Principal principal) {
         Client client = userService.getClientFromProvider(principal);
         return orderService.updateOrderState(stateRequest, client);
     }
 
-    @RolesAllowed("admin")
+    @RolesAllowed("${admin.role}")
     @PostMapping(value = "/realizeOrder/{id}")
     PlacedOrder realizeOrder(@PathVariable Long id) {
         return orderService.realizeOrder(id);
