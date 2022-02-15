@@ -1,4 +1,4 @@
-package pl.put.CinemaManagement.film.controller;
+package pl.put.CinemaManagement.film;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.rest.webmvc.RepositoryRestController;

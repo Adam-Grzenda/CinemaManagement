@@ -1,4 +1,4 @@
-package pl.put.CinemaManagement.order.controller;
+package pl.put.CinemaManagement.order;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

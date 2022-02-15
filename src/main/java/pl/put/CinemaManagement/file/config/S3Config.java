@@ -1,4 +1,4 @@
-package pl.put.CinemaManagement.config;
+package pl.put.CinemaManagement.file.config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

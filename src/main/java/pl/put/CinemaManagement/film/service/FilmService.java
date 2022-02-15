@@ -4,6 +4,7 @@ import com.amazonaws.util.Base64;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.put.CinemaManagement.file.service.FileService;
+import pl.put.CinemaManagement.film.exception.FilmNotFoundException;
 import pl.put.CinemaManagement.film.dto.CreateFilmRequest;
 import pl.put.CinemaManagement.film.repository.FilmRepository;
 import pl.put.CinemaManagement.model.Film;

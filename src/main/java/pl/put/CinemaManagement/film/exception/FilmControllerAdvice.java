@@ -1,4 +1,4 @@
-package pl.put.CinemaManagement.film.controller;
+package pl.put.CinemaManagement.film.exception;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import pl.put.CinemaManagement.film.dto.FilmErrorResponse;
-import pl.put.CinemaManagement.film.service.FilmNotFoundException;
 
 @ControllerAdvice
 public class FilmControllerAdvice extends ResponseEntityExceptionHandler {
