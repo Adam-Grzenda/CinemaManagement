@@ -9,7 +9,8 @@ import pl.put.CinemaManagement.model.pkeys.FoodCourt_ProductTypePK;
 
 import javax.persistence.*;
 
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(

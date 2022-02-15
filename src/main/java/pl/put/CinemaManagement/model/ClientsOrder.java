@@ -10,7 +10,6 @@ import pl.put.CinemaManagement.order.exception.InvalidPaymentStatusException;
 import pl.put.CinemaManagement.order.exception.OrderAlreadyRealizedException;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -62,7 +61,7 @@ public class ClientsOrder extends CinemaEntity {
     @OneToMany(mappedBy = "clientsOrder", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     List<Ticket> tickets;
 
-    public void updatePaymentState(PaymentStatus requestedStatus) throws IllegalStateException{
+    public void updatePaymentState(PaymentStatus requestedStatus) throws IllegalStateException {
         if (this.paymentStatus.compareTo(requestedStatus) > 0) {
             throw new InvalidPaymentStatusException("Requested state is invalid");
         } else {
