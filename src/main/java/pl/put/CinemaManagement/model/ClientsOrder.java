@@ -7,7 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import pl.put.CinemaManagement.order.exception.InvalidPaymentStatusException;
-import pl.put.CinemaManagement.order.exception.OrderAlreadyRealizedException;
+import pl.put.CinemaManagement.order.exception.InvalidOrderStatusException;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -75,7 +75,7 @@ public class ClientsOrder extends CinemaEntity {
         }
 
         if (this.realized) {
-            throw new OrderAlreadyRealizedException();
+            throw new InvalidOrderStatusException("Order is already realized");
         } else {
             this.realized = true;
         }

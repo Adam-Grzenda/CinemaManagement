@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.put.CinemaManagement.model.*;
 import pl.put.CinemaManagement.order.dto.*;
-import pl.put.CinemaManagement.order.exception.BadOrderException;
+import pl.put.CinemaManagement.order.exception.InvalidOrderException;
 import pl.put.CinemaManagement.repository.BasePriceRepository;
 import pl.put.CinemaManagement.repository.ClientsOrderRepository;
 import pl.put.CinemaManagement.repository.FilmShowRepository;
@@ -36,14 +36,14 @@ public class OrderService {
         clientsOrder.setPaymentStatus(ClientsOrder.PaymentStatus.valueOf(order.getPaymentStatus()));
 
         FilmShow filmShow = filmShowRepository.findById(order.getFilmShowId()).orElseThrow(() -> {
-            throw new BadOrderException("Invalid film show id");
+            throw new InvalidOrderException("Invalid film show id");
         });
 
         Long promoOfferId = order.getPromoOfferId();
         PromoOffer promoOffer = null;
         if (promoOfferId != null) {
             promoOffer = promoOfferRepository.findById(promoOfferId).orElseThrow(() -> {
-                throw new BadOrderException("Invalid promo offer id");
+                throw new InvalidOrderException("Invalid promo offer id");
             });
         }
 
@@ -85,7 +85,7 @@ public class OrderService {
         ClientsOrder clientsOrder = clientsOrderRepository.findClientsOrderByClientAndId(
                         client, stateRequest.getOrderId())
                 .orElseThrow(() -> {
-                    throw new BadOrderException("Order for given Id does not exist");
+                    throw new InvalidOrderException("Order for given Id does not exist");
                 });
 
         /*
@@ -132,7 +132,7 @@ public class OrderService {
                     .findById(promoOfferId)
                     .map(PromoOffer::getDiscount)
                     .orElseThrow(() -> {
-                        throw new BadOrderException("Invalid promo ID");
+                        throw new InvalidOrderException("Invalid promo ID");
                     });
         } else {
             return 0;
@@ -165,7 +165,7 @@ public class OrderService {
         float basePrice = priceRepository.findByItemTypeAndItemSubtype(type, subtype)
                 .orElseThrow(
                         () -> {
-                            throw new BadOrderException("Invalid product type/subtype");
+                            throw new InvalidOrderException("Invalid product type/subtype");
                         }
                 ).getBasePrice();
 
@@ -178,7 +178,7 @@ public class OrderService {
     public PlacedOrder realizeOrder(Long id) {
         ClientsOrder clientsOrder = clientsOrderRepository.findById(id)
                 .orElseThrow(() -> {
-                    throw new BadOrderException("Invalid orderId");
+                    throw new InvalidOrderException("Invalid orderId");
                 });
 
         clientsOrder.realizeOrder();

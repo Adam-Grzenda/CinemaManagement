@@ -12,7 +12,7 @@ import org.mockito.stubbing.Answer;
 import pl.put.CinemaManagement.model.*;
 import pl.put.CinemaManagement.order.dto.FoodOrderItem;
 import pl.put.CinemaManagement.order.dto.Order;
-import pl.put.CinemaManagement.order.exception.BadOrderException;
+import pl.put.CinemaManagement.order.exception.InvalidOrderException;
 import pl.put.CinemaManagement.repository.BasePriceRepository;
 import pl.put.CinemaManagement.repository.ClientsOrderRepository;
 import pl.put.CinemaManagement.repository.FilmShowRepository;
@@ -132,7 +132,7 @@ class OrderServiceTest {
 
         when(filmShowRepository.findById(any())).thenReturn(Optional.empty());
 
-        var exception = assertThrows(BadOrderException.class, () -> orderService.placeOrder(order, client));
+        var exception = assertThrows(InvalidOrderException.class, () -> orderService.placeOrder(order, client));
         assertEquals("Invalid film show id", exception.getMessage());
     }
 
@@ -151,7 +151,7 @@ class OrderServiceTest {
         when(filmShowRepository.findById(any())).thenReturn(Optional.of(filmShow));
         when(promoOfferRepository.findById(any())).thenReturn(Optional.empty());
 
-        var exception = assertThrows(BadOrderException.class, () -> orderService.placeOrder(order, client));
+        var exception = assertThrows(InvalidOrderException.class, () -> orderService.placeOrder(order, client));
         assertEquals(exception.getMessage(), "Invalid promo offer id");
     }
 
