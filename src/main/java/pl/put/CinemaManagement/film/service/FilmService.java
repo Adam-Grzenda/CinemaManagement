@@ -1,5 +1,6 @@
 package pl.put.CinemaManagement.film.service;
 
+import com.amazonaws.util.Base64;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.put.CinemaManagement.file.service.FileService;
@@ -7,6 +8,7 @@ import pl.put.CinemaManagement.film.dto.CreateFilmRequest;
 import pl.put.CinemaManagement.film.repository.FilmRepository;
 import pl.put.CinemaManagement.model.Film;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -19,9 +21,10 @@ public class FilmService {
     public Film save(CreateFilmRequest filmDto) throws IOException {
         Film film = filmDto.film();
 
-        if (filmDto.filmPoster() != null) {
+        if (filmDto.poster() != null) {
             String posterId = UUID.randomUUID().toString();
-            fileService.put(posterId, filmDto.filmPoster().getInputStream());
+
+            fileService.put(posterId, new ByteArrayInputStream(Base64.decode(filmDto.poster())));
             film.setImageSource(posterId);
         }
 

@@ -11,6 +11,7 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 @RepositoryRestController
+@CrossOrigin("${client.host}:${client.port}")
 @RestController
 public class FilmController {
 
