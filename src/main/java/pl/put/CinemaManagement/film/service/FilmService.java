@@ -3,6 +3,7 @@ package pl.put.CinemaManagement.film.service;
 import com.amazonaws.util.Base64;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.put.CinemaManagement.file.exception.FileServiceException;
 import pl.put.CinemaManagement.file.service.FileService;
 import pl.put.CinemaManagement.film.exception.FilmNotFoundException;
 import pl.put.CinemaManagement.film.dto.CreateFilmRequest;
@@ -57,7 +58,7 @@ public class FilmService {
         String posterId = film.getImageSource();
         try {
             return fileService.get(posterId);
-        } catch (IOException e) {
+        } catch (FileServiceException e) {
             throw new FilmNotFoundException("Could not retrieve film poster for filmId = " + filmId);
         }
     }

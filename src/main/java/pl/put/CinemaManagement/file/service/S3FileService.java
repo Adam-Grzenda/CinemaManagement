@@ -26,20 +26,25 @@ public class S3FileService implements FileService {
     private String bucket;
 
     @Override
-    public byte[] get(String key) throws IOException {
-        return amazonS3.getObject(new GetObjectRequest(bucket, key)).getObjectContent().readAllBytes();
+    public byte[] get(String key) {
+        try {
+            return amazonS3.getObject(new GetObjectRequest(bucket, key)).getObjectContent().readAllBytes();
+        } catch (IOException e) {
+            throw new FileServiceException(e.getMessage());
+        }
     }
 
     @Override
-    public void put(String key, InputStream fileInputStream) throws IOException {
-        File tempFile = Files.createTempFile(UUID.randomUUID().toString(), "").toFile();
+    public void put(String key, InputStream fileInputStream) {
+        File tempFile = null;
         try {
+            tempFile = Files.createTempFile(UUID.randomUUID().toString(), "").toFile();
             FileUtils.copyInputStreamToFile(fileInputStream, tempFile);
             amazonS3.putObject(new PutObjectRequest(bucket, key, tempFile));
         } catch (IOException e) {
             throw new FileServiceException(e.getMessage());
         } finally {
-            if (tempFile.exists()) {
+            if (tempFile != null && tempFile.exists()) {
                 tempFile.delete();
             }
         }
