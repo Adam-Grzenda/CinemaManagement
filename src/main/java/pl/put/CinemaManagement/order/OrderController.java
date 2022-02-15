@@ -20,7 +20,7 @@ public class OrderController {
     private final OrderService orderService;
     private final UserService userService;
 
-    @RolesAllowed("${user.role}")
+    @RolesAllowed("user")
     @PostMapping(value = "/placeOrder")
     PlacedOrder placeOrder(@RequestBody Order order, Principal principal) {
         Client client = userService.getClientFromProvider(principal);
@@ -32,21 +32,21 @@ public class OrderController {
         return orderService.calculateOrderCost(order);
     }
 
-    @RolesAllowed("${user.role}")
+    @RolesAllowed("user")
     @GetMapping(value = "/getUserOrders")
     List<OrderDisplay> getUserOrders(Principal principal) {
         Client client = userService.getClientFromProvider(principal);
         return orderService.getOrdersForUser(client);
     }
 
-    @RolesAllowed("${user.role}")
+    @RolesAllowed("user")
     @PostMapping(value = "/updateOrderState")
     PlacedOrder updateOrderState(@RequestBody OrderStateRequest stateRequest, Principal principal) {
         Client client = userService.getClientFromProvider(principal);
         return orderService.updateOrderState(stateRequest, client);
     }
 
-    @RolesAllowed("${admin.role}")
+    @RolesAllowed("admin")
     @PostMapping(value = "/realizeOrder/{id}")
     PlacedOrder realizeOrder(@PathVariable Long id) {
         return orderService.realizeOrder(id);

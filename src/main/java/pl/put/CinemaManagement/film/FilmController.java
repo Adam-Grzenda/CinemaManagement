@@ -17,13 +17,13 @@ public class FilmController {
 
     private final FilmService filmService;
 
-    @RolesAllowed("${admin.role}")
+    @RolesAllowed("admin}")
     @PostMapping("/films")
     public Film createFilm(@RequestBody CreateFilmRequest filmDto) throws IOException {
         return filmService.save(filmDto);
     }
 
-    @RolesAllowed("${admin.role}")
+    @RolesAllowed("admin")
     @DeleteMapping("/films/{id}")
     public void deleteFilm(@PathVariable Long id) {
         filmService.delete(id);
