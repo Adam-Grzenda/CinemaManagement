@@ -1,6 +1,7 @@
 package pl.put.CinemaManagement.file.service;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
@@ -41,5 +42,10 @@ public class S3FileService implements FileService {
                 tempFile.delete();
             }
         }
+    }
+
+    @Override
+    public void delete(String key) {
+        amazonS3.deleteObject(new DeleteObjectRequest(bucket, key));
     }
 }
