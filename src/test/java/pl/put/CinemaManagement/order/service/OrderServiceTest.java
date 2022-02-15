@@ -2,7 +2,6 @@ package pl.put.CinemaManagement.order.service;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,7 +12,6 @@ import org.mockito.stubbing.Answer;
 import pl.put.CinemaManagement.model.*;
 import pl.put.CinemaManagement.order.dto.FoodOrderItem;
 import pl.put.CinemaManagement.order.dto.Order;
-import pl.put.CinemaManagement.order.dto.OrderProductCost;
 import pl.put.CinemaManagement.order.exception.BadOrderException;
 import pl.put.CinemaManagement.repository.BasePriceRepository;
 import pl.put.CinemaManagement.repository.ClientsOrderRepository;
@@ -26,8 +24,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static pl.put.CinemaManagement.model.Chair.ChairTypes.NORMAL;
@@ -63,7 +60,7 @@ class OrderServiceTest {
 
     @BeforeEach
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         this.orderService = new OrderService(
                 orderRepository,
                 filmShowRepository,
@@ -102,7 +99,7 @@ class OrderServiceTest {
         var clientsOrder = orderService.placeOrder(order, client);
 
         assertEquals(client.getExternalId(), clientsOrder.getClient().getExternalId());
-        assertEquals(9f, clientsOrder.getAmount());
+        assertEquals(18f, clientsOrder.getAmount());
         assertEquals(OPEN.name(), clientsOrder.getPaymentStatus().name());
         assertEquals(DEBT_CARD, clientsOrder.getPaymentType());
 
@@ -135,7 +132,8 @@ class OrderServiceTest {
 
         when(filmShowRepository.findById(any())).thenReturn(Optional.empty());
 
-        Assert.assertThrows("Invalid film show id", BadOrderException.class, () -> orderService.placeOrder(order, client));
+        var exception = assertThrows(BadOrderException.class, () -> orderService.placeOrder(order, client));
+        assertEquals("Invalid film show id", exception.getMessage());
     }
 
     @Test
@@ -153,7 +151,8 @@ class OrderServiceTest {
         when(filmShowRepository.findById(any())).thenReturn(Optional.of(filmShow));
         when(promoOfferRepository.findById(any())).thenReturn(Optional.empty());
 
-        Assert.assertThrows("Invalid promo offer id", BadOrderException.class, () -> orderService.placeOrder(order, client));
+        var exception = assertThrows(BadOrderException.class, () -> orderService.placeOrder(order, client));
+        assertEquals(exception.getMessage(), "Invalid promo offer id");
     }
 
     @SneakyThrows
