@@ -9,7 +9,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import pl.put.CinemaManagement.order.dto.OrderErrorResponse;
 
-@ControllerAdvice
+@ControllerAdvice("pl.put.CinemaManagement.order")
 public class OrderControllerAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler({IllegalStateException.class})
     public ResponseEntity<Object> handleInvalidState(IllegalStateException e, WebRequest webRequest) {

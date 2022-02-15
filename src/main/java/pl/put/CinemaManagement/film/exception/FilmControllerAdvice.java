@@ -9,7 +9,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import pl.put.CinemaManagement.film.dto.FilmErrorResponse;
 
-@ControllerAdvice
+@ControllerAdvice("pl.put.CinemaManagement.film")
 public class FilmControllerAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(FilmNotFoundException.class)
     public ResponseEntity<Object> filmNotFound(FilmNotFoundException e, WebRequest webRequest) {
