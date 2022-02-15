@@ -10,7 +10,8 @@ import pl.put.CinemaManagement.repository.ClientRepository;
 
 import java.security.Principal;
 
-@Slf4j @RequiredArgsConstructor
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class UserService {
     private final ClientRepository clientRepository;

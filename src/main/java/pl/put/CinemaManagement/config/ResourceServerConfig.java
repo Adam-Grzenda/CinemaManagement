@@ -1,7 +1,5 @@
-package pl.put.CinemaManagement.security.config;
+package pl.put.CinemaManagement.config;
 
-import org.keycloak.adapters.KeycloakConfigResolver;
-import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,12 +38,6 @@ public class ResourceServerConfig extends KeycloakWebSecurityConfigurerAdapter {
     sessionAuthenticationStrategy() {
         return new NullAuthenticatedSessionStrategy();
     }
-
-    @Bean
-    public KeycloakConfigResolver KeycloakConfigResolver() {
-        return new KeycloakSpringBootConfigResolver();
-    }
-
 
 
 }

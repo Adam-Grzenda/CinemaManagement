@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.ToString;
 import pl.put.CinemaManagement.model.ClientsOrder;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
