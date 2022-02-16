@@ -20,7 +20,7 @@ public class FilmService {
     private final FilmRepository filmRepository;
     private final FileService fileService;
 
-    public Film save(CreateFilmRequest filmDto) throws IOException {
+    public Film save(CreateFilmRequest filmDto) {
         Film film = filmDto.film();
 
         if (filmDto.poster() != null) {

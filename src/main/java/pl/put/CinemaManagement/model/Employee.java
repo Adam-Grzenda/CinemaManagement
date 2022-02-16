@@ -25,7 +25,7 @@ public class Employee extends CinemaEntity {
         CLEANER("cleaner");
         private final String stringValue;
 
-        private WorkPosition(String stringValue) {
+        WorkPosition(String stringValue) {
             this.stringValue = stringValue;
         }
 
