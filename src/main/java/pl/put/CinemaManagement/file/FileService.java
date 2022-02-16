@@ -1,4 +1,4 @@
-package pl.put.CinemaManagement.file.service;
+package pl.put.CinemaManagement.file;
 
 import java.io.InputStream;
 

@@ -1,4 +1,4 @@
-package pl.put.CinemaManagement.file.service;
+package pl.put.CinemaManagement.file.s3;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import pl.put.CinemaManagement.file.exception.FileServiceException;
+import pl.put.CinemaManagement.file.FileServiceException;
+import pl.put.CinemaManagement.file.FileService;
 
 import java.io.File;
 import java.io.IOException;

@@ -3,15 +3,14 @@ package pl.put.CinemaManagement.film.service;
 import com.amazonaws.util.Base64;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.put.CinemaManagement.file.exception.FileServiceException;
-import pl.put.CinemaManagement.file.service.FileService;
+import pl.put.CinemaManagement.file.FileServiceException;
+import pl.put.CinemaManagement.file.FileService;
 import pl.put.CinemaManagement.film.exception.FilmNotFoundException;
 import pl.put.CinemaManagement.film.dto.CreateFilmRequest;
 import pl.put.CinemaManagement.film.repository.FilmRepository;
 import pl.put.CinemaManagement.model.Film;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.UUID;
 
 @RequiredArgsConstructor
