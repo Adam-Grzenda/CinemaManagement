@@ -3,7 +3,6 @@ package pl.put.CinemaManagement.film;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.web.bind.annotation.*;
-import pl.put.CinemaManagement.film.service.FilmService;
 import pl.put.CinemaManagement.film.dto.CreateFilmRequest;
 import pl.put.CinemaManagement.model.Film;
 
@@ -19,7 +18,7 @@ public class FilmController {
 
     @RolesAllowed("admin}")
     @PostMapping("/films")
-    public Film createFilm(@RequestBody CreateFilmRequest filmDto) throws IOException {
+    public Film createFilm(@RequestBody CreateFilmRequest filmDto) {
         return filmService.save(filmDto);
     }
 

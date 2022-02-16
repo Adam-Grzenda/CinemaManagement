@@ -1,4 +1,4 @@
-package pl.put.CinemaManagement.film.service;
+package pl.put.CinemaManagement.film;
 
 import com.amazonaws.util.Base64;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +7,6 @@ import pl.put.CinemaManagement.file.FileServiceException;
 import pl.put.CinemaManagement.file.FileService;
 import pl.put.CinemaManagement.film.exception.FilmNotFoundException;
 import pl.put.CinemaManagement.film.dto.CreateFilmRequest;
-import pl.put.CinemaManagement.film.repository.FilmRepository;
 import pl.put.CinemaManagement.model.Film;
 
 import java.io.ByteArrayInputStream;
