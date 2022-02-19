@@ -14,7 +14,7 @@ public class FilmController {
 
     private final FilmService filmService;
 
-    @RolesAllowed("admin}")
+    @RolesAllowed("admin")
     @PostMapping("/films")
     public Film createFilm(@RequestBody CreateFilmRequest filmDto) {
         return filmService.save(filmDto);
