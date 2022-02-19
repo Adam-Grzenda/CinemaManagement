@@ -3,10 +3,9 @@ package pl.put.CinemaManagement.order;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import pl.put.CinemaManagement.model.Client;
+import pl.put.CinemaManagement.order.client.Client;
 import pl.put.CinemaManagement.order.dto.*;
-import pl.put.CinemaManagement.order.service.OrderService;
-import pl.put.CinemaManagement.order.service.UserService;
+import pl.put.CinemaManagement.order.client.ClientService;
 
 import javax.annotation.security.RolesAllowed;
 import java.security.Principal;
@@ -14,17 +13,16 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:4200")
 @RestController
 public class OrderController {
 
     private final OrderService orderService;
-    private final UserService userService;
+    private final ClientService clientService;
 
     @RolesAllowed("user")
     @PostMapping(value = "/placeOrder")
     PlacedOrder placeOrder(@RequestBody Order order, Principal principal) {
-        Client client = userService.getClientFromProvider(principal);
+        Client client = clientService.getClientFromProvider(principal);
         return PlacedOrder.of(orderService.placeOrder(order, client));
     }
 
@@ -36,14 +34,14 @@ public class OrderController {
     @RolesAllowed("user")
     @GetMapping(value = "/getUserOrders")
     List<OrderDisplay> getUserOrders(Principal principal) {
-        Client client = userService.getClientFromProvider(principal);
+        Client client = clientService.getClientFromProvider(principal);
         return orderService.getOrdersForUser(client);
     }
 
     @RolesAllowed("user")
     @PostMapping(value = "/updateOrderState")
     PlacedOrder updateOrderState(@RequestBody OrderStateRequest stateRequest, Principal principal) {
-        Client client = userService.getClientFromProvider(principal);
+        Client client = clientService.getClientFromProvider(principal);
         return orderService.updateOrderState(stateRequest, client);
     }
 
