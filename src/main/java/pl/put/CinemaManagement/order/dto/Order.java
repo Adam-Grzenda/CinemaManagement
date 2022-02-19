@@ -2,7 +2,7 @@ package pl.put.CinemaManagement.order.dto;
 
 import lombok.Data;
 import lombok.ToString;
-import pl.put.CinemaManagement.model.Chair;
+import pl.put.CinemaManagement.cinema.assets.Chair;
 
 import java.util.List;
 

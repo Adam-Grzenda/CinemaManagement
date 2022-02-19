@@ -2,7 +2,7 @@ package pl.put.CinemaManagement.order.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import pl.put.CinemaManagement.model.ClientsOrder;
+import pl.put.CinemaManagement.order.client.ClientsOrder;
 
 @Data
 @AllArgsConstructor

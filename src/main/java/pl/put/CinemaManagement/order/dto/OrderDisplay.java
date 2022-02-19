@@ -2,7 +2,7 @@ package pl.put.CinemaManagement.order.dto;
 
 import lombok.Data;
 import lombok.ToString;
-import pl.put.CinemaManagement.model.ClientsOrder;
+import pl.put.CinemaManagement.order.client.ClientsOrder;
 
 import java.sql.Timestamp;
 import java.util.List;

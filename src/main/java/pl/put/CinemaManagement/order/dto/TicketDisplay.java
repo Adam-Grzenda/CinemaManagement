@@ -2,9 +2,9 @@ package pl.put.CinemaManagement.order.dto;
 
 import lombok.Data;
 import lombok.ToString;
-import pl.put.CinemaManagement.model.Chair;
-import pl.put.CinemaManagement.model.FilmShow;
-import pl.put.CinemaManagement.model.Ticket;
+import pl.put.CinemaManagement.cinema.assets.Chair;
+import pl.put.CinemaManagement.cinema.film.show.FilmShow;
+import pl.put.CinemaManagement.order.ticket.Ticket;
 
 import java.sql.Date;
 
