@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import pl.put.CinemaManagement.order.client.ClientSegment;
-import pl.put.CinemaManagement.CinemaEntity;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,7 +17,11 @@ import java.util.List;
 @Table(
         name = "promo_offer",
         uniqueConstraints = @UniqueConstraint(columnNames = "name"))
-public class PromoOffer extends CinemaEntity {
+public class PromoOffer {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id;
 
     @Column(name = "name")
     @NotNull

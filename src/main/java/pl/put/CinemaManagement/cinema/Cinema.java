@@ -6,12 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.put.CinemaManagement.cinema.assets.CinemaHall;
 import pl.put.CinemaManagement.cinema.food.FoodCourt;
-import pl.put.CinemaManagement.CinemaEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import java.util.List;
 
 @Getter
@@ -23,7 +19,12 @@ import java.util.List;
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "name"),
                 @UniqueConstraint(columnNames = "address")})
-public class Cinema extends CinemaEntity {
+public class Cinema {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id;
+
     @NotNull
     private String name;
     @NotNull

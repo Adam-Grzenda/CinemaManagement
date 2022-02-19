@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import pl.put.CinemaManagement.cinema.food.FoodCourtProductType;
-import pl.put.CinemaManagement.CinemaEntity;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,7 +17,11 @@ import java.util.List;
 @Table(
         name = "product_type",
         uniqueConstraints = @UniqueConstraint(columnNames = "name"))
-public class ProductType extends CinemaEntity {
+public class ProductType {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id;
 
     @Column(name = "name")
     @NotNull

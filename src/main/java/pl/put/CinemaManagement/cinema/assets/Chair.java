@@ -8,7 +8,6 @@ import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import pl.put.CinemaManagement.CinemaEntity;
 
 import javax.persistence.*;
 
@@ -22,12 +21,16 @@ import javax.persistence.*;
         uniqueConstraints =
         @UniqueConstraint(columnNames =
                 {"hall_row", "hall_column", "cinema_hall_id"}))
-public class Chair extends CinemaEntity {
+public class Chair {
     public enum ChairTypes {
         NORMAL,
         PREMIUM,
         DOUBLE
     }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id;
 
     @Column(name = "hall_row")
     @NotNull

@@ -7,7 +7,6 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import pl.put.CinemaManagement.cinema.Cinema;
-import pl.put.CinemaManagement.CinemaEntity;
 
 import javax.persistence.*;
 import java.util.List;
@@ -20,7 +19,11 @@ import java.util.List;
         name = "cinema_hall",
         uniqueConstraints =
         @UniqueConstraint(columnNames = {"number", "cinema_id"}))
-public class CinemaHall extends CinemaEntity {
+public class CinemaHall {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull

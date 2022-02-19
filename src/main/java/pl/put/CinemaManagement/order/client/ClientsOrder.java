@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
-import pl.put.CinemaManagement.CinemaEntity;
 import pl.put.CinemaManagement.order.ticket.Ticket;
 
 import javax.persistence.*;
@@ -19,7 +18,7 @@ import java.util.List;
 @Entity
 @Table(
         name = "clients_order")
-public class ClientsOrder extends CinemaEntity {
+public class ClientsOrder {
     public enum PaymentType {
         CASH, CREDIT_CARD, DEBT_CARD, ONLINE_PAYMENT
     }
@@ -27,6 +26,10 @@ public class ClientsOrder extends CinemaEntity {
     public enum PaymentStatus {
         OPEN, IN_PROCESS, FAILED, CLOSED, CANCELLED
     }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id;
 
     @Column(name = "realized")
     @NotNull

@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.put.CinemaManagement.cinema.Cinema;
-import pl.put.CinemaManagement.CinemaEntity;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,7 +17,11 @@ import java.util.List;
         name = "food_court",
         uniqueConstraints =
         @UniqueConstraint(columnNames = {"name", "cinema_id"}))
-public class FoodCourt extends CinemaEntity {
+public class FoodCourt {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id;
 
     @Column(name = "name")
     @NotNull

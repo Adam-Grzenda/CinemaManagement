@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.put.CinemaManagement.order.client.ClientsOrder;
-import pl.put.CinemaManagement.CinemaEntity;
 
 import javax.persistence.*;
 
@@ -18,7 +17,11 @@ import javax.persistence.*;
         uniqueConstraints =
         @UniqueConstraint(columnNames =
                 {"order_id", "product_type_id"}))
-public class ProductOnOrder extends CinemaEntity {
+public class ProductOnOrder {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id;
 
     @Column(name = "count")
     @NotNull

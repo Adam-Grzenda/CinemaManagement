@@ -8,7 +8,6 @@ import lombok.ToString;
 import pl.put.CinemaManagement.cinema.assets.Chair;
 import pl.put.CinemaManagement.cinema.film.show.FilmShow;
 import pl.put.CinemaManagement.order.client.ClientsOrder;
-import pl.put.CinemaManagement.CinemaEntity;
 import pl.put.CinemaManagement.order.promo.PromoOffer;
 
 import javax.persistence.*;
@@ -23,7 +22,11 @@ import javax.persistence.*;
         uniqueConstraints =
         @UniqueConstraint(columnNames =
                 {"film_show_id", "chair_id"}))
-public class Ticket extends CinemaEntity {
+public class Ticket {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id;
 
     @Column(name = "price")
     private float price;

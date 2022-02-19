@@ -3,7 +3,6 @@ package pl.put.CinemaManagement.order.client;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.put.CinemaManagement.CinemaEntity;
 
 import javax.persistence.*;
 import java.util.List;
@@ -14,7 +13,11 @@ import java.util.List;
 @Entity
 @Table(
         name = "client")
-public class Client extends CinemaEntity {
+public class Client {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id;
 
     @Column(name = "name")
     private String name;

@@ -8,7 +8,6 @@ import org.hibernate.annotations.ColumnDefault;
 import pl.put.CinemaManagement.cinema.Employee;
 import pl.put.CinemaManagement.cinema.assets.CinemaHall;
 import pl.put.CinemaManagement.cinema.film.advertisement.Advertisement;
-import pl.put.CinemaManagement.CinemaEntity;
 import pl.put.CinemaManagement.cinema.film.Film;
 
 import javax.persistence.*;
@@ -27,10 +26,14 @@ import java.util.List;
                 "date"}))
 //  #TODO czas filmu +- => zajęta sala, nwm czy to da się w constraint walnąć
 // moze pola start i end i trigger ustawiajacy end na start+film.duration?
-public class FilmShow extends CinemaEntity {
+public class FilmShow {
     public enum FilmShowType {
         IMAX, TWO_DIM, THREE_DIM, FIVE_DIM
     }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id;
 
     @Column(name = "date")
     @NotNull

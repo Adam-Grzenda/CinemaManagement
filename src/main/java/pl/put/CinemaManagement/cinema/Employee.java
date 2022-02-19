@@ -4,7 +4,6 @@ import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.put.CinemaManagement.CinemaEntity;
 import pl.put.CinemaManagement.cinema.film.show.FilmShow;
 
 import javax.persistence.*;
@@ -19,7 +18,7 @@ import java.util.List;
         name = "employee",
         uniqueConstraints =
         @UniqueConstraint(columnNames = "pesel"))
-public class Employee extends CinemaEntity {
+public class Employee {
     private enum WorkPosition {
         ENTRY("entry"),
         MANAGER("manager"),
@@ -36,6 +35,10 @@ public class Employee extends CinemaEntity {
             return this.stringValue;
         }
     }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id;
 
     @Column(name = "pesel")
     @NotNull

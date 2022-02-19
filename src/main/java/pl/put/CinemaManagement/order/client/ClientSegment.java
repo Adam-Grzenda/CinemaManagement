@@ -4,7 +4,6 @@ import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.put.CinemaManagement.CinemaEntity;
 import pl.put.CinemaManagement.order.promo.PromoOffer;
 
 import javax.persistence.*;
@@ -17,7 +16,11 @@ import java.util.List;
 @Table(
         name = "client_segment",
         uniqueConstraints = @UniqueConstraint(columnNames = "name"))
-public class ClientSegment extends CinemaEntity {
+public class ClientSegment {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id;
 
     @Column(name = "name")
     @NotNull

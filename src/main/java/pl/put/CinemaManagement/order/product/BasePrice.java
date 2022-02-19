@@ -5,11 +5,8 @@ import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.put.CinemaManagement.CinemaEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -17,7 +14,11 @@ import javax.persistence.Table;
 @Entity
 @Table(
         name = "prices")
-public class BasePrice extends CinemaEntity {
+public class BasePrice {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id;
 
     @NotNull
     @Column(name = "item_name")

@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-import pl.put.CinemaManagement.CinemaEntity;
 import pl.put.CinemaManagement.cinema.film.show.FilmShow;
 import pl.put.CinemaManagement.cinema.film.Film;
 
@@ -19,7 +18,10 @@ import java.util.List;
 @Table(
         name = "advertisement"
 )
-public class Advertisement extends CinemaEntity {
+public class Advertisement {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id;
 
     @Column(name = "company_name")
     @ColumnDefault(value = "'own'")
