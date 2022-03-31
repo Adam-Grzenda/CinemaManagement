@@ -3,18 +3,22 @@ package pl.put.CinemaManagement.file.s3;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ListObjectsV2Request;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import pl.put.CinemaManagement.file.FileServiceException;
+import pl.put.CinemaManagement.file.FileDetails;
+import pl.put.CinemaManagement.file.FileListRequest;
 import pl.put.CinemaManagement.file.FileService;
+import pl.put.CinemaManagement.file.FileServiceException;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -55,4 +59,30 @@ public class S3FileService implements FileService {
     public void delete(String key) {
         amazonS3.deleteObject(new DeleteObjectRequest(bucket, key));
     }
+
+    @Override
+    public S3FileList listFiles(FileListRequest request) {
+        var listRequest = new ListObjectsV2Request()
+                .withBucketName(bucket)
+                .withMaxKeys(request.maxKeys());
+
+        if (request.continuationToken() != null) {
+            listRequest = listRequest.withContinuationToken(request.continuationToken());
+        }
+
+        var listObjectResponse = amazonS3.listObjectsV2(listRequest);
+
+        List<FileDetails> fileDetails = listObjectResponse.getObjectSummaries()
+                .stream()
+                .map(summary -> new FileDetails(summary.getKey()))
+                .toList();
+
+        return S3FileList.builder()
+                .files(fileDetails)
+                .isTruncated(listObjectResponse.isTruncated())
+                .continuationToken(listObjectResponse.getContinuationToken())
+                .build();
+    }
+
+
 }

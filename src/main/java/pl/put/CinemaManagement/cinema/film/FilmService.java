@@ -3,9 +3,9 @@ package pl.put.CinemaManagement.cinema.film;
 import com.amazonaws.util.Base64;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.put.CinemaManagement.file.FileServiceException;
-import pl.put.CinemaManagement.file.FileService;
 import pl.put.CinemaManagement.cinema.film.dto.CreateFilmRequest;
+import pl.put.CinemaManagement.file.FileService;
+import pl.put.CinemaManagement.file.FileServiceException;
 
 import java.io.ByteArrayInputStream;
 import java.util.UUID;
@@ -42,7 +42,8 @@ public class FilmService {
 
 
     public Film findFilmById(Long filmId) {
-        return filmRepository.findById(filmId).orElseThrow(() -> new FilmNotFoundException("Cannot get film with id=" + filmId + "requested film does not exist"));
+        return filmRepository.findById(filmId)
+                .orElseThrow(() -> new FilmNotFoundException("Cannot get film with id=" + filmId + "requested film does not exist"));
     }
 
     public Iterable<Film> findAllFilms() {
