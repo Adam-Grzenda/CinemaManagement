@@ -1,14 +1,11 @@
 package pl.put.CinemaManagement.cinema.film;
 
-import com.amazonaws.util.Base64;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.put.CinemaManagement.cinema.film.dto.CreateFilmRequest;
+import pl.put.CinemaManagement.file.FileDetails;
 import pl.put.CinemaManagement.file.FileService;
 import pl.put.CinemaManagement.file.FileServiceException;
-
-import java.io.ByteArrayInputStream;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -20,10 +17,7 @@ public class FilmService {
         Film film = filmDto.film();
 
         if (filmDto.poster() != null) {
-            String posterId = UUID.randomUUID().toString();
-
-            fileService.put(posterId, new ByteArrayInputStream(Base64.decode(filmDto.poster())));
-            film.setImageSource(posterId);
+            film.setImageSource(filmDto.poster().key());
         }
 
         return filmRepository.save(film);
@@ -50,7 +44,7 @@ public class FilmService {
         return filmRepository.findAll();
     }
 
-    public byte[] getFilmPoster(Long filmId) {
+    public FileDetails getFilmPoster(Long filmId) {
         Film film = findFilmById(filmId);
         String posterId = film.getImageSource();
         try {
@@ -59,5 +53,6 @@ public class FilmService {
             throw new FilmNotFoundException("Could not retrieve film poster for filmId = " + filmId);
         }
     }
+
 
 }

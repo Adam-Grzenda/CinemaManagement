@@ -5,7 +5,7 @@ import pl.put.CinemaManagement.file.s3.S3FileList;
 import java.io.InputStream;
 
 public interface FileService {
-    byte[] get(String key);
+    FileDetails get(String key);
 
     void put(String key, InputStream fileInputStream);
 
