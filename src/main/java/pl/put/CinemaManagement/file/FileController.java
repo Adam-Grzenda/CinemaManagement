@@ -15,7 +15,7 @@ public class FileController {
     private final FileService fileService;
 
     @GetMapping("/{objectKey}")
-    byte[] getFile(@PathVariable String objectKey) {
+    FileDetails getFile(@PathVariable String objectKey) {
         return fileService.get(objectKey);
     }
 

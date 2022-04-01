@@ -1,5 +1,6 @@
 package pl.put.CinemaManagement.file.s3;
 
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import lombok.RequiredArgsConstructor;
@@ -36,10 +37,12 @@ public class S3FileService implements FileService {
     private Long expirationMillis;
 
     @Override
-    public byte[] get(String key) {
+    public FileDetails get(String key) {
+        var expiration = Date.from(Instant.ofEpochMilli(Instant.now().toEpochMilli() + expirationMillis));
+
         try {
-            return amazonS3.getObject(new GetObjectRequest(bucket, key)).getObjectContent().readAllBytes();
-        } catch (IOException e) {
+            return new FileDetails(key, createDirectRef(key, expiration));
+        } catch (SdkClientException e) {
             throw new FileServiceException(e.getMessage());
         }
     }
