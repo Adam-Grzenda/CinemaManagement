@@ -25,6 +25,8 @@ public class Client {
     @Column(name = "external_id")
     private String externalId;
 
+    private String email;
+
     @ManyToMany
     @JoinTable(
             name = "client_client_segment",
@@ -32,10 +34,11 @@ public class Client {
             inverseJoinColumns = @JoinColumn(name = "client_segment_id"))
     private List<ClientSegment> clientSegments;
 
-    public static Client fromExternalId(String externalId, String name) {
+    public static Client fromExternalId(String externalId, String name, String email) {
         Client client = new Client();
         client.externalId = externalId;
         client.name = name;
+        client.email = email;
         return client;
     }
 }
