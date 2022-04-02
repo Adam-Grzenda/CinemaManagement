@@ -17,10 +17,11 @@ public class ClientService {
     public Client getClientFromProvider(Principal principal) {
         AccessToken accessToken = getAccessToken(principal);
         String externalId = accessToken.getSubject();
+        String email = accessToken.getEmail();
         log.info("Retrieved user with external ID: : " + externalId);
         return clientRepository.getClientByExternalId(externalId).orElseGet(
                 () ->
-                        clientRepository.save(Client.fromExternalId(externalId, accessToken.getName()))
+                        clientRepository.save(Client.fromExternalId(externalId, accessToken.getName(), email))
         );
     }
 

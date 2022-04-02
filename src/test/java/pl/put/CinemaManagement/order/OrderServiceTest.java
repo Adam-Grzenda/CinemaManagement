@@ -9,6 +9,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import pl.put.CinemaManagement.cinema.Cinema;
 import pl.put.CinemaManagement.cinema.assets.Chair;
 import pl.put.CinemaManagement.cinema.assets.CinemaHall;
@@ -20,6 +22,7 @@ import pl.put.CinemaManagement.order.client.ClientsOrder;
 import pl.put.CinemaManagement.order.client.ClientsOrderRepository;
 import pl.put.CinemaManagement.order.dto.FoodOrderItem;
 import pl.put.CinemaManagement.order.dto.Order;
+import pl.put.CinemaManagement.order.kafka.KafkaService;
 import pl.put.CinemaManagement.order.product.BasePrice;
 import pl.put.CinemaManagement.order.product.BasePriceRepository;
 import pl.put.CinemaManagement.order.promo.PromoOffer;
@@ -34,7 +37,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static pl.put.CinemaManagement.cinema.assets.Chair.ChairTypes.NORMAL;
 import static pl.put.CinemaManagement.order.client.ClientsOrder.PaymentStatus.IN_PROCESS;
 import static pl.put.CinemaManagement.order.client.ClientsOrder.PaymentStatus.OPEN;
@@ -42,6 +45,7 @@ import static pl.put.CinemaManagement.order.client.ClientsOrder.PaymentType.DEBT
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class OrderServiceTest {
     private final Random random = new Random();
 
@@ -56,6 +60,9 @@ class OrderServiceTest {
 
     @Mock
     private PromoOfferRepository promoOfferRepository;
+
+    @Autowired
+    private KafkaService kafkaService;
 
     private OrderService orderService;
     private Cinema cinema;
@@ -73,7 +80,8 @@ class OrderServiceTest {
                 orderRepository,
                 filmShowRepository,
                 priceRepository,
-                promoOfferRepository
+                promoOfferRepository,
+                kafkaService
         );
 
         this.cinema = createCinema();
@@ -105,6 +113,8 @@ class OrderServiceTest {
         when(orderRepository.save(any())).thenAnswer((Answer<ClientsOrder>) invocationOnMock -> invocationOnMock.getArgument(0));
 
         var clientsOrder = orderService.placeOrder(order, client);
+
+        verify(kafkaService, times(1)).sendNotification(any());
 
         assertEquals(client.getExternalId(), clientsOrder.getClient().getExternalId());
         assertEquals(18f, clientsOrder.getAmount());
@@ -188,7 +198,8 @@ class OrderServiceTest {
         assertTrue(orderTimestamps.containsAll(displayTimestamps));
 
         var expectedPriceSum = tickets.stream().mapToDouble(Ticket::getPrice).sum();
-        assertTrue(orderDisplays.stream().allMatch(a -> a.getPrice() == expectedPriceSum && a.getPaymentStatus() == IN_PROCESS));
+        assertTrue(orderDisplays.stream()
+                .allMatch(a -> a.getPrice() == expectedPriceSum && a.getPaymentStatus() == IN_PROCESS));
 
     }
 
@@ -222,7 +233,9 @@ class OrderServiceTest {
         var costs = orderService.calculateOrderCost(order);
 
         double expectedTotal = chairs.size() * baseChairPrice.getBasePrice() * (100 - promoOffer.getDiscount()) / 100 + foods.size() * baseFoodPrice.getBasePrice() * (100 - promoOffer.getDiscount()) / 100;
-        assertEquals(expectedTotal, costs.stream().mapToDouble(orderProductCost -> orderProductCost.getFinalPrice() * orderProductCost.getItemCount()).sum());
+        assertEquals(expectedTotal, costs.stream()
+                .mapToDouble(orderProductCost -> orderProductCost.getFinalPrice() * orderProductCost.getItemCount())
+                .sum());
 
     }
 
@@ -275,6 +288,7 @@ class OrderServiceTest {
         client.setClientSegments(List.of());
         client.setExternalId(UUID.randomUUID().toString());
         client.setName("John Smith");
+        client.setEmail("adam.grzenda@gmail.com");
 
         return client;
     }

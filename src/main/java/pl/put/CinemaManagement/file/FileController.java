@@ -1,11 +1,11 @@
 package pl.put.CinemaManagement.file;
 
-import com.amazonaws.util.Base64;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.security.RolesAllowed;
-import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/files")
@@ -15,14 +15,14 @@ public class FileController {
     private final FileService fileService;
 
     @GetMapping("/{objectKey}")
-    byte[] getFile(@PathVariable String objectKey) {
+    FileDetails getFile(@PathVariable String objectKey) {
         return fileService.get(objectKey);
     }
 
     @RolesAllowed("admin")
     @PostMapping("/{objectKey}")
-    void putFile(@PathVariable String objectKey, @RequestBody String file) { //TODO - migrate to multipart?
-        fileService.put(objectKey, new ByteArrayInputStream(Base64.decode(file)));
+    void putFile(@PathVariable String objectKey, @RequestParam MultipartFile file) throws IOException {
+        fileService.put(objectKey, file.getInputStream());
     }
 
     @RolesAllowed("admin")

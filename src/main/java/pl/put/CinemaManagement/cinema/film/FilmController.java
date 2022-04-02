@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.web.bind.annotation.*;
 import pl.put.CinemaManagement.cinema.film.dto.CreateFilmRequest;
+import pl.put.CinemaManagement.file.FileDetails;
 
 import javax.annotation.security.RolesAllowed;
 
@@ -26,6 +27,12 @@ public class FilmController {
         filmService.delete(id);
     }
 
+    @RolesAllowed("admin")
+    @PutMapping("/films")
+    public Film putFilm(@RequestBody CreateFilmRequest request) {
+        return filmService.save(request);
+    }
+
     @GetMapping("/films")
     public Iterable<Film> getAllFilms() {
         return filmService.findAllFilms();
@@ -37,7 +44,7 @@ public class FilmController {
     }
 
     @GetMapping("/films/{id}/poster")
-    public byte[] getFilmPoster(@PathVariable Long id) {
+    public FileDetails getFilmPoster(@PathVariable Long id) {
         return filmService.getFilmPoster(id);
     }
 

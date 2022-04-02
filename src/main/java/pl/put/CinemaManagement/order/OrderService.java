@@ -5,15 +5,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.put.CinemaManagement.cinema.assets.Chair;
 import pl.put.CinemaManagement.cinema.film.show.FilmShow;
+import pl.put.CinemaManagement.cinema.film.show.FilmShowRepository;
 import pl.put.CinemaManagement.order.client.Client;
 import pl.put.CinemaManagement.order.client.ClientsOrder;
 import pl.put.CinemaManagement.order.client.ClientsOrderRepository;
-import pl.put.CinemaManagement.order.promo.PromoOffer;
 import pl.put.CinemaManagement.order.dto.*;
+import pl.put.CinemaManagement.order.kafka.KafkaService;
+import pl.put.CinemaManagement.order.kafka.NotificationRequest;
 import pl.put.CinemaManagement.order.product.BasePriceRepository;
-import pl.put.CinemaManagement.order.ticket.Ticket;
-import pl.put.CinemaManagement.cinema.film.show.FilmShowRepository;
+import pl.put.CinemaManagement.order.promo.PromoOffer;
 import pl.put.CinemaManagement.order.promo.PromoOfferRepository;
+import pl.put.CinemaManagement.order.ticket.Ticket;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +26,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class OrderService {
-
     private final ClientsOrderRepository clientsOrderRepository;
     private final FilmShowRepository filmShowRepository;
     private final BasePriceRepository priceRepository;
     private final PromoOfferRepository promoOfferRepository;
 
+    private final KafkaService kafkaService;
 
     public ClientsOrder placeOrder(Order order, Client client) {
         log.info(order.toString());
@@ -76,7 +78,17 @@ public class OrderService {
 
         clientsOrder.setAmount(calculateTotalCost(order));
 
-        return clientsOrderRepository.save(clientsOrder);
+        var placedOrder = clientsOrderRepository.save(clientsOrder);
+        kafkaService.sendNotification(
+                NotificationRequest.builder()
+                        .type(NotificationRequest.NotificationType.email)
+                        .recipient(client.getEmail())
+                        .subject("Order confirmation")
+                        .body("Your order " + placedOrder.getId() + " was succesfully placed!")
+                        .build()
+        );
+
+        return placedOrder;
     }
 
     public List<OrderDisplay> getOrdersForUser(Client client) {
@@ -106,7 +118,17 @@ public class OrderService {
             return PlacedOrder.failed(clientsOrder);
         }
 
-        return PlacedOrder.of(clientsOrderRepository.save(clientsOrder));
+        PlacedOrder placedOrder = PlacedOrder.of(clientsOrderRepository.save(clientsOrder));
+        kafkaService.sendNotification(
+                NotificationRequest.builder()
+                        .type(NotificationRequest.NotificationType.email)
+                        .recipient(client.getEmail())
+                        .subject("Order " + clientsOrder.getId() + " status has been updated")
+                        .body("Your order status has been changed to: " + clientsOrder.getPaymentStatus())
+                        .build()
+        );
+
+        return placedOrder;
     }
 
 
